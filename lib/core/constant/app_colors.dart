@@ -11,5 +11,6 @@ class AppColors {
    static const Color success = Color(0xff11CE19);
    static const Color unselectedUnswer=Color(0xFFEDEFF3);
    static const Color blue = Color(0xff02369C);
+   static const Color fouceblue = Color(0xff5679bd);
 
 }

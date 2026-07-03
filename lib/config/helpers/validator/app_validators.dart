@@ -1,7 +1,7 @@
 class AppValidators {
   AppValidators._();
 
-  String? usernameValidator(String? value) {
+ static String? usernameValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "Username is required";
     }
