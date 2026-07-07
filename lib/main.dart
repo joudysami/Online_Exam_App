@@ -1,7 +1,6 @@
 import 'package:exam_app/config/routes/app_routes.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
-import 'package:exam_app/config/theme/theme_provider.dart';
-import 'package:exam_app/core/theme/app_theme.dart';
+import 'package:exam_app/core/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +29,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-         
+          theme: ThemeData.light(),
           themeMode: context.watch<ThemeProvider>().themeMode,
           initialRoute: AppRoutesNamed.login,
           onGenerateRoute: AppRoutes.onGenerateRoute,
