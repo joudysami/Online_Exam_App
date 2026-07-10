@@ -1,5 +1,6 @@
 import 'package:exam_app/config/routes/app_routes.dart';
-import 'package:exam_app/config/routes/app_routes_named.dart';
+import 'package:exam_app/core/theme/app_colors.dart';
+import 'package:exam_app/core/theme/app_theme.dart';
 import 'package:exam_app/core/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,12 +28,12 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
+        return MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.light(),
+          theme: AppTheme(LightThemeColor()).themeData,
+          darkTheme: AppTheme(DarkThemeColor()).themeData,
           themeMode: context.watch<ThemeProvider>().themeMode,
-          initialRoute: AppRoutesNamed.login,
-          onGenerateRoute: AppRoutes.onGenerateRoute,
+          routerConfig:AppRoutes.goRouter,
         );
       },
     );

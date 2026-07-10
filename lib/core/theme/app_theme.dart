@@ -7,7 +7,7 @@ class AppTheme {
   AppTheme(this.colors);
   late  ThemeData themeData = ThemeData(
     colorScheme: ColorScheme(
-      brightness: Brightness.light,
+      brightness: colors.brightness,
       primary: colors.blue,
       onPrimary: colors.white,
       secondary: colors.blue,
@@ -17,10 +17,10 @@ class AppTheme {
       surface: colors.white,
       onSurface: colors.black,
     ),
-    brightness: Brightness.light,
+    brightness: colors.brightness,
     scaffoldBackgroundColor: colors.white,
     appBarTheme: AppBarTheme(
-      color: colors.white,
+      backgroundColor: colors.white,
       iconTheme: IconThemeData(color: colors.black, size: 20.w),
     ),
     textTheme: TextTheme(
@@ -78,3 +78,4 @@ class AppTheme {
 
  
 }
+
