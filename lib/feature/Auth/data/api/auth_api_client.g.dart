@@ -1,2 +1,0 @@
-
-/// retrofit generated code//
