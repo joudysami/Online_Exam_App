@@ -61,4 +61,17 @@ class AppValidators {
     }
     return null;
   }
+  static String? resetPasswordValidator(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return 'Password is required';
+  }
+
+  final regex = RegExp(r'^(?=.*[A-Z])(?=.*\d).{6,}$');
+
+  if (!regex.hasMatch(value)) {
+    return 'Password must contain at least 6 characters, one uppercase letter and one number';
+  }
+
+  return null;
+}
 }

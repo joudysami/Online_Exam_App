@@ -2,6 +2,7 @@ import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
+import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -82,10 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Spacer(),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutesNamed.forgetPassword,
-                        );
+                      context.pushNamed(AppRoutesNamed.forgetPassword);
                       },
                       child: Text(
                         'Forgot Password?',
@@ -97,19 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 16.h),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      //   if (_formKey.currentState!.validate()) {
-                      //   context.pushNamed(AppRoutesNamed.home);
-                      // }
-                     
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(fontSize: 16.sp,
-                          fontWeight: FontWeight.w500, color: colors.white),
-                    ),
-                  ),
+                  child: CustomButton(text: "Login",
+                  onTap: () {
+                  },),
                 ),
                 SizedBox(height: 16.h),
                 Row(
