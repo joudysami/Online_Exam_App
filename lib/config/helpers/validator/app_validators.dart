@@ -1,15 +1,15 @@
 class AppValidators {
   AppValidators._();
 
- static String? usernameValidator(String? value) {
+ static String? usernameValidator(String? value, {String field = 'Name'}) {
     if (value == null || value.trim().isEmpty) {
-      return "Username is required";
+      return "$field is required";
     }
     if (value.length < 4) {
-      return "Username must be at least 4 characters";
+      return "$field must be at least 4 characters";
     }
     if (value.contains(" ")) {
-      return "Username cannot contain spaces";
+      return "$field cannot contain spaces";
     }
     final regex = RegExp(r'^[a-zA-Z0-9_]+$');
     if (!regex.hasMatch(value)) {
