@@ -1,7 +1,7 @@
 import 'package:exam_app/config/routes/app_routes_named.dart';
-import 'package:exam_app/feature/Auth/presentation/forget_password/view/email_verification_screen.dart';
-import 'package:exam_app/feature/Auth/presentation/forget_password/view/forget_password_screen.dart';
-import 'package:exam_app/feature/Auth/presentation/forget_password/view/reset_password_screen.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view/screens/email_verification_screen.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view/screens/forget_password_screen.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view/screens/reset_password_screen.dart';
 import 'package:exam_app/feature/Auth/presentation/login/view/login_screen.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view/sign_up_screen.dart';
 import 'package:go_router/go_router.dart';

@@ -1,8 +1,8 @@
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
-import 'package:exam_app/config/routes/app_routes.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
+import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
    late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   bool isChecked = false;
+   final _formKey = GlobalKey<FormState>();
   
   @override
   void initState() {
@@ -40,99 +41,86 @@ class _LoginScreenState extends State<LoginScreen> {
         
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomTextField(
-                label: 'Email',
-                hint: 'Enter your email',
-                validator: (value) {
-                  AppValidators.emailValidator(value);
-                  return null;
-                },
-                controller: _emailController,
-              ),
-              SizedBox(height: 16.h),
-              CustomTextField(
-                label: 'Password',
-                hint: 'Enter your password',
-                validator: (value) {
-                  AppValidators.passwordValidator(value);
-                  return null;
-                },
-                controller: _passwordController,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                    activeColor: colors.blue,
-                    side: BorderSide(color: colors.grey, width: 1.5.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
-                    value: isChecked,
-                    onChanged: (bool? value) {
-                      ///////remove after///////
-                      setState(() {
-                        isChecked = value ?? false;
-                      });
-                    },
-                  ),
-                  Text(
-                    'Remember me',
-                    style: TextStyle(color: colors.black, fontSize: 14.sp,),
-                  ),
-                  Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        AppRoutesNamed.forgetPassword,
-                      );
-                    },
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: colors.blue, fontSize: 14.sp, decoration: TextDecoration.underline),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                   
-                  },
-                  child: Text(
-                    'Login',
-                    style: TextStyle(fontSize: 16.sp,
-                        fontWeight: FontWeight.w500, color: colors.white),
-                  ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextField(
+                  label: 'Email',
+                  hint: 'Enter your email',
+                  validator: AppValidators.emailValidator,               
+                  controller: _emailController,
                 ),
-              ),
-              SizedBox(height: 16.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Don\'t have an account?',
-                    style: TextStyle(color: colors.black, fontSize: 15.sp),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                     context.pushNamed(AppRoutesNamed.signup);
-                    },
-                    child: Text(
-                      'Sign Up',
-                      style:
-                          TextStyle(color: colors.blue, fontSize: 14.sp,decoration: TextDecoration.underline,),
+                SizedBox(height: 16.h),
+                CustomTextField(
+                  label: 'Password',
+                  hint: 'Enter your password',
+                  validator:AppValidators.passwordValidator, 
+                  controller: _passwordController,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Checkbox(
+                      activeColor: colors.blue,
+                      side: BorderSide(color: colors.grey, width: 1.5.w),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        ///////remove after///////
+                        setState(() {
+                          isChecked = value ?? false;
+                        });
+                      },
                     ),
-                  ),
-                ],
-              ),  
-            ],
+                    Text(
+                      'Remember me',
+                      style: TextStyle(color: colors.black, fontSize: 14.sp,),
+                    ),
+                    Spacer(),
+                    TextButton(
+                      onPressed: () {
+                      context.pushNamed(AppRoutesNamed.forgetPassword);
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: colors.blue, fontSize: 14.sp, decoration: TextDecoration.underline),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(text: "Login",
+                  onTap: () {
+                  },),
+                ),
+                SizedBox(height: 16.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Don\'t have an account?',
+                      style: TextStyle(color: colors.black, fontSize: 15.sp),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                       context.pushNamed(AppRoutesNamed.signup);
+                      },
+                      child: Text(
+                        'Sign Up',
+                        style:
+                            TextStyle(color: colors.blue, fontSize: 14.sp,decoration: TextDecoration.underline,),
+                      ),
+                    ),
+                  ],
+                ),  
+              ],
+            ),
           ),
         ),
       ),
