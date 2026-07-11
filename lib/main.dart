@@ -1,3 +1,4 @@
+import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/routes/app_routes.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/theme/app_theme.dart';
@@ -6,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-void main (){
+Future<void> main () async {
+  WidgetsFlutterBinding.ensureInitialized();
+ await configureDependencies();
   runApp(
     MultiProvider(
       providers: [

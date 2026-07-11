@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:exam_app/config/Di/di.dart';
+import 'package:exam_app/config/network/auth_interceptors.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:injectable/injectable.dart';
@@ -14,22 +16,20 @@ abstract class DioModule {
       connectTimeout: Duration(seconds: 60),
       sendTimeout: Duration(seconds: 60),
     );
-    dio.interceptors.add(
-      PrettyDioLogger(
-      requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90,
-        enabled: kDebugMode,
-        filter: (options, args){
-            if(options.path.contains('/posts')){
-              return false;
-            }
-            return !args.isResponse || !args.hasUint8ListData;
-          }));
+    dio.interceptors.add(getIt<AuthInterceptors>());
+    if (kDebugMode) {
+      dio.interceptors.add(
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          maxWidth: 90,
+        ),
+      );
+    }
     return dio;
   }
 }
