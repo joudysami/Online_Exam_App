@@ -8,16 +8,15 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-  CustomAppBar({super.key, required this.title});
+  const CustomAppBar({super.key, required this.title});
   final String title ;
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
 }
-
 class _CustomAppBarState extends State<CustomAppBar> {
-  late AppColors colors;
   @override
   Widget build(BuildContext context) {
+ final colors = context.colors;
     return AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 16,

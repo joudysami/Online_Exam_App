@@ -1,11 +1,11 @@
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
-import 'package:exam_app/core/constant/app_icons.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,7 +19,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController _userNameController;
   late final TextEditingController _confirmPasswordController;
   late final TextEditingController _phoneNumberController;
-  late AppColors colors;
 
   @override
   void initState() {
@@ -43,8 +42,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
-      resizeToAvoidBottomInset: true, 
+      resizeToAvoidBottomInset: true,
       appBar: CustomAppBar(title: 'Sign Up'),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -62,7 +62,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 16.h),
 
-              
               Row(
                 children: [
                   Expanded(
@@ -82,7 +81,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 16.h),
 
-              
               CustomTextField(
                 label: 'Email',
                 hint: 'Enter your email',
@@ -97,7 +95,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: CustomTextField(
                       label: 'Password',
                       hint: 'Enter your password',
-                      validator: (value) => AppValidators.passwordValidator(value),
+                      validator: (value) =>
+                          AppValidators.passwordValidator(value),
                       controller: _passwordController,
                     ),
                   ),
@@ -106,7 +105,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: CustomTextField(
                       label: 'Confirm Password',
                       hint: 'Confirm password',
-                      validator: (value) => AppValidators.confirmPasswordValidator(value, _passwordController.text),
+                      validator: (value) =>
+                          AppValidators.confirmPasswordValidator(
+                            value,
+                            _passwordController.text,
+                          ),
                       controller: _confirmPasswordController,
                     ),
                   ),
@@ -114,7 +117,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 16.h),
 
-            
               CustomTextField(
                 label: 'Phone Number',
                 hint: 'Enter your phone number',
@@ -124,11 +126,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               SizedBox(height: 48.h),
 
-            
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                     context.pushNamed(AppRoutesNamed.login);
+                  },
                   child: Text(
                     'Sign Up',
                     style: TextStyle(
@@ -150,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, AppRoutesNamed.login);
+                      context.pushNamed(AppRoutesNamed.login);
                     },
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,

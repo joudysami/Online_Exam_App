@@ -124,3 +124,9 @@ class DarkThemeColor extends AppColors {
   Brightness get brightness => Brightness.dark;
 
 }
+
+extension ThemeColors on BuildContext {
+  AppColors get colors => Theme.of(this).brightness == Brightness.light
+      ? LightThemeColor()
+      : DarkThemeColor();
+}

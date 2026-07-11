@@ -1,11 +1,12 @@
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
+import 'package:exam_app/config/routes/app_routes.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
-import 'package:exam_app/core/constant/app_icons.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +17,6 @@ class _LoginScreenState extends State<LoginScreen> {
    late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   bool isChecked = false;
-  late AppColors colors;
   
   @override
   void initState() {
@@ -33,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(title: 'Login'),
@@ -121,10 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        AppRoutesNamed.signup,
-                      );
+                     context.pushNamed(AppRoutesNamed.signup);
                     },
                     child: Text(
                       'Sign Up',
