@@ -1,0 +1,80 @@
+import 'package:exam_app/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class AppTheme {
+ AppColors colors ;
+  AppTheme(this.colors);
+  late  ThemeData themeData = ThemeData(
+    colorScheme: ColorScheme(
+      brightness: Brightness.light,
+      primary: colors.blue,
+      onPrimary: colors.white,
+      secondary: colors.blue,
+      onSecondary: colors.white,
+      error: colors.error,
+      onError: colors.white,
+      surface: colors.white,
+      onSurface: colors.black,
+    ),
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: colors.white,
+    appBarTheme: AppBarTheme(
+      color: colors.white,
+      iconTheme: IconThemeData(color: colors.black, size: 20.w),
+    ),
+    textTheme: TextTheme(
+      titleLarge: TextStyle(
+        color: colors.black,
+        fontSize: 24.sp,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      filled: true,
+      fillColor: colors.white,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      labelStyle: TextStyle(
+        color: colors.black,
+        fontSize: 18.sp,
+        fontWeight: FontWeight.w500,
+      ),
+      hintStyle: TextStyle(color: colors.grey, fontSize: 13.sp),
+      errorStyle: TextStyle(color: colors.error, fontSize: 11.sp),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.r),
+        borderSide: BorderSide(color: colors.grey),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6.r),
+        borderSide: BorderSide(color: colors.grey, width: 1.5.w),
+      ),
+      outlineBorder: BorderSide(color: colors.grey, width: 1.5.w),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6.r),
+        borderSide: BorderSide(color: colors.error, width: 1.5.w),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6.r),
+        borderSide: BorderSide(color: colors.grey, width: 1.5.w),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6.r),
+        borderSide: BorderSide(color: colors.focusBlue, width: 1.5.w),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: colors.blue,
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.r),
+        ),
+        elevation: 0,
+      ),
+    ),
+  );
+
+ 
+}
