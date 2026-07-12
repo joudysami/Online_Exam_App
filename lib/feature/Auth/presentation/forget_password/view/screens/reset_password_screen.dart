@@ -16,18 +16,18 @@ class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  State<ResetPasswordScreen> createState() => ResetPasswordScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+class ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -70,7 +70,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   CustomTextField(
                     label: 'New password',
                     hint: 'Enter your password',
-                    controller: _passwordController,
+                    controller: passwordController,
                     obscureText: true,
                     validator: AppValidators.resetPasswordValidator,
                   ),
@@ -78,11 +78,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   CustomTextField(
                     label: 'Confirm password',
                     hint: 'Confirm password',
-                    controller: _confirmPasswordController,
+                    controller: confirmPasswordController,
                     obscureText: true,
                     validator: (value) => AppValidators.confirmPasswordValidator(
                       value,
-                      _passwordController.text,
+                      passwordController.text,
                     ),
                   ),
                   SizedBox(height: 48.h),
@@ -95,7 +95,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             onTap: () {
                               if (_formKey.currentState!.validate()) {
                                 context.read<ForgetPasswordViewModel>().resetPassword(
-                                  _passwordController.text,
+                                  passwordController.text,
                                 );
                               }
                             },

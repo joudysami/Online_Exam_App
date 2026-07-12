@@ -21,18 +21,18 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  late final TextEditingController _emailController;
+  late final TextEditingController emailController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController();
+    emailController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    emailController.dispose();
     super.dispose();
   }
 
@@ -70,7 +70,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     label: 'Email',
                     hint: 'Enter your email',
                     validator: AppValidators.emailValidator,
-                    controller: _emailController,
+                    controller: emailController,
                   ),
                   SizedBox(height: 48.h),
                   SizedBox(
@@ -82,7 +82,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             onTap: () {
                               if (_formKey.currentState!.validate()) {
                                 context.read<ForgetPasswordViewModel>().forgotPassword(
-                                  _emailController.text.trim(),
+                                  emailController.text.trim(),
                                 );
                               }
                             },

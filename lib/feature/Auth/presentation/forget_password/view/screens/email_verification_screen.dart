@@ -16,10 +16,10 @@ class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({super.key});
 
   @override
-  State<EmailVerificationScreen> createState() => _EmailVerificationScreenState();
+  State<EmailVerificationScreen> createState() => EmailVerificationScreenState();
 }
 
-class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
+class EmailVerificationScreenState extends State<EmailVerificationScreen> {
   final PinInputController pinController = PinInputController();
   bool hasError = false;
 

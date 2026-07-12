@@ -8,22 +8,22 @@ import '../state/forget_password_state.dart';
 
 @injectable
 class ForgetPasswordViewModel extends Cubit<ForgetPasswordState> {
-  final ForgetPasswordUseCase _forgetPasswordUseCase;
-  final VerifyCodeUseCase _verifyCodeUseCase;
-  final ResetPasswordUseCase _resetPasswordUseCase;
+  final ForgetPasswordUseCase forgetPasswordUseCase;
+  final VerifyCodeUseCase verifyCodeUseCase;
+  final ResetPasswordUseCase resetPasswordUseCase;
 
-  String _email = '';
+  String email = '';
 
   ForgetPasswordViewModel(
-    this._forgetPasswordUseCase,
-    this._verifyCodeUseCase,
-    this._resetPasswordUseCase,
+    this.forgetPasswordUseCase,
+    this.verifyCodeUseCase,
+    this.resetPasswordUseCase,
   ) : super(ForgetPasswordInitial());
 
   Future<void> forgotPassword(String email) async {
-    _email = email;
+    this.email = email;
     emit(ForgetPasswordLoading());
-    final response = await _forgetPasswordUseCase(email);
+    final response = await forgetPasswordUseCase(email);
     if (response is SuccessResponse<String>) {
       emit(ForgetPasswordSuccess(response.data));
     } else if (response is ErrorResponse<String>) {
@@ -33,7 +33,7 @@ class ForgetPasswordViewModel extends Cubit<ForgetPasswordState> {
 
   Future<void> verifyCode(String code) async {
     emit(VerifyCodeLoading());
-    final response = await _verifyCodeUseCase(code);
+    final response = await verifyCodeUseCase(code);
     if (response is SuccessResponse<String>) {
       emit(VerifyCodeSuccess());
     } else if (response is ErrorResponse<String>) {
@@ -43,7 +43,7 @@ class ForgetPasswordViewModel extends Cubit<ForgetPasswordState> {
 
   Future<void> resetPassword(String newPassword) async {
     emit(ResetPasswordLoading());
-    final response = await _resetPasswordUseCase(_email, newPassword);
+    final response = await resetPasswordUseCase(email, newPassword);
     if (response is SuccessResponse<String>) {
       emit(ResetPasswordSuccess());
     } else if (response is ErrorResponse<String>) {
