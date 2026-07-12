@@ -5,8 +5,11 @@ import 'package:exam_app/core/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:exam_app/config/Di/di.dart';
 
-void main (){
+void main () async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
   runApp(
     MultiProvider(
       providers: [
