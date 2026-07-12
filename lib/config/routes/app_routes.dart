@@ -8,7 +8,7 @@ import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/fo
 import 'package:exam_app/feature/Auth/presentation/login/view/login_screen.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view/sign_up_screen.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart';
-import 'package:exam_app/feature/Home/presentation/view/screens/home_screen.dart';
+import 'package:exam_app/feature/Home/presentation/view/home_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
