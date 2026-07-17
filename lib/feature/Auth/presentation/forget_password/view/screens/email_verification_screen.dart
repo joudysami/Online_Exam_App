@@ -1,11 +1,14 @@
+import 'package:exam_app/config/Di/di.dart';
+import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
+import 'package:exam_app/feature/Auth/domain/entity/auth_entity.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view/widgets/header_section.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view/widgets/pin_code_input.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view/widgets/resend_code_text.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_event.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_view_model.dart';
-import 'package:exam_app/feature/Auth/presentation/forget_password/state/forget_password_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +25,7 @@ class EmailVerificationScreen extends StatefulWidget {
 class EmailVerificationScreenState extends State<EmailVerificationScreen> {
   final PinInputController pinController = PinInputController();
   bool hasError = false;
+   late final ForgetPasswordViewModel viewModel = getIt<ForgetPasswordViewModel>();
 
   @override
   void dispose() {
@@ -38,15 +42,16 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return BlocConsumer<ForgetPasswordViewModel, ForgetPasswordState>(
+    return BlocConsumer<ForgetPasswordViewModel,BaseState<AuthEntity>>(
+      bloc: viewModel,
       listener: (context, state) {
-        if (state is VerifyCodeSuccess) {
+        if (state.data!=null) {
           context.pushNamed(AppRoutesNamed.resetPassword);
-        } else if (state is VerifyCodeError) {
+        } else if (state.errorMessage.isNotEmpty) {
           setState(() => hasError = true);
           pinController.triggerError();
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
           );
         }
       },
@@ -65,7 +70,7 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   subtitle: 'Please enter your code that send to your\nemail address',
                 ),
                 SizedBox(height: 32.h),
-                state is VerifyCodeLoading
+                state.isLoading
                     ? Padding(
                         padding: EdgeInsets.only(top: 20.h),
                         child: CircularProgressIndicator(color: colors.blue),
@@ -80,7 +85,8 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
                           }
                         },
                         onCompleted: (code) {
-                          context.read<ForgetPasswordViewModel>().verifyCode(code);
+                        viewModel.doEvent(EmailVerification(
+                          code));
                         },
                       ),
                 if (hasError) ...[

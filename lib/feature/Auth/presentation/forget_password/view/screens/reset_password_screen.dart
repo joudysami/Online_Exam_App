@@ -1,12 +1,15 @@
+import 'package:exam_app/config/Di/di.dart';
+import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
+import 'package:exam_app/feature/Auth/domain/entity/auth_entity.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view/widgets/header_section.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_event.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_view_model.dart';
-import 'package:exam_app/feature/Auth/presentation/forget_password/state/forget_password_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +26,7 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
+   late final ForgetPasswordViewModel viewModel = getIt<ForgetPasswordViewModel>();
   @override
   void dispose() {
     passwordController.dispose();
@@ -34,9 +37,10 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return BlocConsumer<ForgetPasswordViewModel, ForgetPasswordState>(
+    return BlocConsumer<ForgetPasswordViewModel, BaseState<AuthEntity>>(
+      bloc: viewModel,
       listener: (context, state) {
-        if (state is ResetPasswordSuccess) {
+        if (state.data!=null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Password reset successfully!'),
@@ -44,9 +48,9 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
             ),
           );
           context.goNamed(AppRoutesNamed.login);
-        } else if (state is ResetPasswordError) {
+        } else if (state.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
           );
         }
       },
@@ -88,15 +92,15 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   SizedBox(height: 48.h),
                   SizedBox(
                     width: double.infinity,
-                    child: state is ResetPasswordLoading
+                    child: state.isLoading
                         ? Center(child: CircularProgressIndicator(color: colors.blue))
                         : CustomButton(
                             text: 'Continue',
                             onTap: () {
                               if (_formKey.currentState!.validate()) {
-                                context.read<ForgetPasswordViewModel>().resetPassword(
+                               viewModel.doEvent(ResetPassword(
                                   passwordController.text,
-                                );
+                               ));
                               }
                             },
                           ),
