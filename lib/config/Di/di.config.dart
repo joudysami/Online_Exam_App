@@ -38,6 +38,7 @@ import '../../feature/Auth/presentation/login/view_model/login_view_model.dart'
 import '../../feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart'
     as _i735;
 import '../modules/dio_module.dart' as _i948;
+import '../network/auth_interceptors.dart' as _i466;
 import 'api_module.dart' as _i804;
 import 'shared_pref_module.dart' as _i451;
 
@@ -55,12 +56,17 @@ extension GetItInjectableX on _i174.GetIt {
       () => sharedPrefModule.prefs,
       preResolve: true,
     );
-    gh.singleton<_i361.Dio>(() => dioModule.provideDio());
-    gh.lazySingleton<_i39.AuthApiClient>(
-      () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
+    gh.factory<_i466.AuthInterceptors>(
+      () => _i466.AuthInterceptors(gh<_i460.SharedPreferences>()),
     );
     gh.factory<_i505.AuthLocalDatasource>(
       () => _i868.AuthLocalDatasourceImpl(gh<_i460.SharedPreferences>()),
+    );
+    gh.singleton<_i361.Dio>(
+      () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
+    );
+    gh.lazySingleton<_i39.AuthApiClient>(
+      () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),
