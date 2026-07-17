@@ -1,3 +1,5 @@
+import 'package:exam_app/config/Di/di.dart';
+import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
@@ -5,7 +7,8 @@ import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
 import 'package:exam_app/feature/Auth/data/models/sign_up_request.dart';
-import 'package:exam_app/feature/Auth/presentation/sign_up/state/sign_up_state.dart';
+import 'package:exam_app/feature/Auth/domain/entity/auth_entity.dart';
+import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_event.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController _confirmPasswordController;
   late final TextEditingController _phoneNumberController;
   final _formKey = GlobalKey<FormState>();
+  late final SignUpViewModel singUpViewModel = getIt<SignUpViewModel>();
 
   @override
   void initState() {
@@ -58,14 +62,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: CustomAppBar(title: 'Sign Up'),
-      body: BlocConsumer<SignUpViewModel, SignUpState>(
+      body: BlocConsumer<SignUpViewModel, BaseState<AuthEntity>>(
+        bloc: singUpViewModel,
         listener: (context, state) {
-          if (state is SignUpSuccess) {
+          if (state.data != null) {
             context.goNamed(AppRoutesNamed.home);
-          } else if (state is SignUpError) {
+          } else if (state.errorMessage.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.errorMessage),
                 backgroundColor: Colors.red,
               ),
             );
@@ -85,8 +90,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     CustomTextField(
                       label: 'User name',
                       hint: 'Enter your user name',
-                      validator: (value) =>
-                          AppValidators.usernameValidator(value, field: 'userName'),
+                      validator: (value) => AppValidators.usernameValidator(
+                        value,
+                        field: 'userName',
+                      ),
                       controller: _userNameController,
                     ),
                     SizedBox(height: 16.h),
@@ -97,10 +104,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: CustomTextField(
                             label: 'First name',
                             hint: 'Enter your first name',
-                            validator: (value) => AppValidators.usernameValidator(
-                              value,
-                              field: 'firstName',
-                            ),
+                            validator: (value) =>
+                                AppValidators.usernameValidator(
+                                  value,
+                                  field: 'firstName',
+                                ),
                             controller: _firstNameController,
                           ),
                         ),
@@ -109,10 +117,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: CustomTextField(
                             label: 'Last name',
                             hint: 'Enter your last name',
-                            validator: (value) => AppValidators.usernameValidator(
-                              value,
-                              field: 'lastName',
-                            ),
+                            validator: (value) =>
+                                AppValidators.usernameValidator(
+                                  value,
+                                  field: 'lastName',
+                                ),
                             controller: _lastNameController,
                           ),
                         ),
@@ -167,24 +176,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     SizedBox(
                       width: double.infinity,
-                      child: state is SignUpLoading
+                      child: state.isLoading
                           ? Center(
-                              child: CircularProgressIndicator(color: colors.blue),
+                              child: CircularProgressIndicator(
+                                color: colors.blue,
+                              ),
                             )
                           : CustomButton(
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
-                                  context.read<SignUpViewModel>().signUp(
-                                        SignUpRequest(
-                                          username: _userNameController.text.trim(),
-                                          firstName: _firstNameController.text.trim(),
-                                          lastName: _lastNameController.text.trim(),
-                                          email: _emailController.text.trim(),
-                                          password: _passwordController.text,
-                                          rePassword: _confirmPasswordController.text,
-                                          phone: _phoneNumberController.text.trim(),
-                                        ),
-                                      );
+                                  singUpViewModel.doEvent(
+                                    SingUp(
+                                      SignUpRequest(
+                                        username: _userNameController.text
+                                            .trim(),
+                                        firstName: _firstNameController.text
+                                            .trim(),
+                                        lastName: _lastNameController.text
+                                            .trim(),
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                        rePassword:
+                                            _confirmPasswordController.text,
+                                        phone: _phoneNumberController.text
+                                            .trim(),
+                                      ),
+                                    ),
+                                  );
                                 }
                               },
                               text: "Signup",
@@ -197,7 +215,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         Text(
                           'Already have an account? ',
-                          style: TextStyle(color: colors.black, fontSize: 15.sp),
+                          style: TextStyle(
+                            color: colors.black,
+                            fontSize: 15.sp,
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
