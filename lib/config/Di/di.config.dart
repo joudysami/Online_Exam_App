@@ -39,6 +39,7 @@ import '../../feature/Auth/presentation/sign_up/view_model/sign_up_view_model.da
     as _i735;
 import '../modules/dio_module.dart' as _i948;
 import '../network/auth_interceptors.dart' as _i466;
+import '../network/safe_call.dart' as _i185;
 import 'api_module.dart' as _i804;
 import 'shared_pref_module.dart' as _i451;
 
@@ -56,6 +57,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => sharedPrefModule.prefs,
       preResolve: true,
     );
+    gh.factory<_i185.SafeCall>(() => _i185.SafeCall());
     gh.factory<_i466.AuthInterceptors>(
       () => _i466.AuthInterceptors(gh<_i460.SharedPreferences>()),
     );
@@ -75,6 +77,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i716.AuthRepositoryImpl(
         gh<_i345.AuthRemoteDatasource>(),
         gh<_i505.AuthLocalDatasource>(),
+        gh<_i185.SafeCall>(),
       ),
     );
     gh.factory<_i486.ForgetPasswordUseCase>(

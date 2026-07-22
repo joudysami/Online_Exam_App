@@ -1,4 +1,4 @@
-import 'package:exam_app/config/errors/error_parser.dart';
+import 'package:exam_app/config/network/safe_call.dart';
 import 'package:injectable/injectable.dart';
 import 'package:exam_app/config/base/base_response.dart';
 import 'package:exam_app/feature/Auth/data/models/login_request.dart';
@@ -15,72 +15,70 @@ import 'package:exam_app/feature/Auth/data/datasource/local/auth_local_datasourc
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource remoteDatasource;
   final AuthLocalDatasource localDatasource;
-
-  AuthRepositoryImpl(this.remoteDatasource, this.localDatasource);
+  final SafeCall safeCall;
+  AuthRepositoryImpl(
+    this.remoteDatasource,
+    this.localDatasource,
+    this.safeCall,
+  );
 
   @override
   Future<BaseResponse<AuthEntity>> signIn(LoginRequest request) async {
-    try {
+    return safeCall.safeApiCall(() async {
       final response = await remoteDatasource.signIn(request);
       if (response.token != null) {
         await localDatasource.saveToken(response.token!);
       }
-      final entity = AuthEntity(
+      return AuthEntity(
         token: response.token,
         email: response.user?.email,
         username: response.user?.username,
       );
-      return SuccessResponse<AuthEntity>(entity);
-    } catch (e) {
-      return ErrorResponse<AuthEntity>(appError: errorParser(e as Exception));
-    }
+    });
   }
 
   @override
   Future<BaseResponse<AuthEntity>> signUp(SignUpRequest request) async {
-    try {
+    return safeCall.safeApiCall(() async {
       final response = await remoteDatasource.signUp(request);
       if (response.token != null) {
         await localDatasource.saveToken(response.token!);
       }
-      final entity = AuthEntity(
+      return AuthEntity(
         token: response.token,
         email: response.user?.email,
         username: response.user?.username,
       );
-      return SuccessResponse<AuthEntity>(entity);
-    } catch (e) {
-      return ErrorResponse<AuthEntity>(appError: errorParser(e as Exception));
-    }
+    });
   }
 
   @override
-  Future<BaseResponse<String>> forgotPassword(ForgetPasswordRequest request) async {
-    try {
+  Future<BaseResponse<String>> forgotPassword(
+    ForgetPasswordRequest request,
+  ) async {
+    return safeCall.safeApiCall(() async {
       final response = await remoteDatasource.forgotPassword(request);
-      return SuccessResponse<String>(response.message ?? 'Reset code sent successfully');
-    } catch (e) {
-      return ErrorResponse<String>(appError: errorParser(e as Exception));
-    }
+      return response.message ?? 'Reset code sent successfully';
+    });
   }
 
   @override
-  Future<BaseResponse<String>> verifyResetCode(VerifyResetCodeRequest request) async {
-    try {
+  Future<BaseResponse<String>> verifyResetCode(
+    VerifyResetCodeRequest request,
+  ) async {
+    return safeCall.safeApiCall(() async {
       final response = await remoteDatasource.verifyResetCode(request);
-      return SuccessResponse<String>(response.message ?? 'Code verified successfully');
-    } catch (e) {
-      return ErrorResponse<String>(appError: errorParser(e as Exception));
-    }
+      return response.message ?? 'Code verified successfully';
+    });
   }
 
   @override
-  Future<BaseResponse<String>> resetPassword(ResetPasswordRequest request) async {
-    try {
+  Future<BaseResponse<String>> resetPassword(
+    ResetPasswordRequest request,
+  ) async {
+    return safeCall.safeApiCall(() async {
       final response = await remoteDatasource.resetPassword(request);
-      return SuccessResponse<String>(response.message ?? 'Password reset successfully');
-    } catch (e) {
-      return ErrorResponse<String>(appError: errorParser(e as Exception));
-    }
+      return response.message ?? 'Password reset successfully';
+    });
   }
 }
