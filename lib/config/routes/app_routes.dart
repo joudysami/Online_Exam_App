@@ -8,7 +8,10 @@ import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/fo
 import 'package:exam_app/feature/Auth/presentation/login/view/login_screen.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view/sign_up_screen.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart';
+import 'package:exam_app/feature/Home/presentation/view/screens/explore_screen.dart';
 import 'package:exam_app/feature/Home/presentation/view/screens/home_screen.dart';
+import 'package:exam_app/feature/Home/presentation/view_model/home_event.dart';
+import 'package:exam_app/feature/Home/presentation/view_model/home_view_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,24 +19,24 @@ class AppRoutes {
   static GoRouter goRouter = GoRouter(
     initialLocation: AppRoutesNamed.login,
     redirect: (context, state) {
-    final token = getIt<AuthLocalDatasource>().getToken();
+      final token = getIt<AuthLocalDatasource>().getToken();
 
-    final loggedIn = token != null && token.isNotEmpty;
+      final loggedIn = token != null && token.isNotEmpty;
 
-    final isAuthPage =
-        state.matchedLocation == AppRoutesNamed.login ||
-        state.matchedLocation == AppRoutesNamed.signup;
+      final isAuthPage =
+          state.matchedLocation == AppRoutesNamed.login ||
+          state.matchedLocation == AppRoutesNamed.signup;
 
-    if (!loggedIn && !isAuthPage) {
-      return AppRoutesNamed.login;
-    }
+      if (!loggedIn && !isAuthPage) {
+        return AppRoutesNamed.login;
+      }
 
-    if (loggedIn && isAuthPage) {
-      return AppRoutesNamed.home;
-    }
+      if (loggedIn && isAuthPage) {
+        return AppRoutesNamed.home;
+      }
 
-    return null;
-  },
+      return null;
+    },
 
     routes: [
       GoRoute(
@@ -49,11 +52,7 @@ class AppRoutes {
           child: const SignUpScreen(),
         ),
       ),
-      GoRoute(
-        path: AppRoutesNamed.home,
-        name: AppRoutesNamed.home,
-        builder: (context, state) => const HomeScreen(),
-      ),
+
       // Forget Password flow - wrapped in a shared ShellRoute to share one Cubit
       ShellRoute(
         builder: (context, state, child) => BlocProvider(
@@ -76,11 +75,23 @@ class AppRoutes {
             name: AppRoutesNamed.resetPassword,
             builder: (context, state) => const ResetPasswordScreen(),
           ),
+          GoRoute(
+            path: AppRoutesNamed.home,
+            name: AppRoutesNamed.home,
+            builder: (context, state) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: AppRoutesNamed.explore,
+            name: AppRoutesNamed.explore,
+            builder: (context, state) {
+              return BlocProvider(
+                create: (_) => getIt<HomeViewModel>()..doEvent(GetAllSubject()),
+                child: const ExploreScreen(),
+              );
+            },
+          ),
         ],
       ),
     ],
   );
 }
-
-
-

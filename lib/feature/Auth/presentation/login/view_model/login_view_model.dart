@@ -12,36 +12,34 @@ class LoginViewModel extends Cubit<BaseState<AuthEntity>> {
   final LoginUseCase _loginUseCase;
 
   LoginViewModel(this._loginUseCase) : super(BaseState<AuthEntity>());
-  void doEvent(LoginEvent event){
-    switch(event) {
+  void doEvent(LoginEvent event) {
+    switch (event) {
       case Login():
-      _login(event.email,event.password);
+        _login(event.email, event.password);
         break;
     }
   }
 
   Future<void> _login(String email, String password) async {
-    emit(
-  state.copyWith(
-    isLoading: true,
-    errorMessage: '',
-  ),);
+    emit(state.copyWith(isLoading: true, errorMessage: ''));
     final request = LoginRequest(email: email, password: password);
     final response = await _loginUseCase(request);
 
     if (response is SuccessResponse) {
-emit(
-  state.copyWith(
-    isLoading: false,
-    data: (response as SuccessResponse).data,
-    errorMessage: '',
-  ),
-);    } else if (response is ErrorResponse) {
-emit(
-  state.copyWith(
-    isLoading: false,
-    errorMessage:(response as ErrorResponse).errorMessage,
-  ),
-);    }
+      emit(
+        state.copyWith(
+          isLoading: false,
+          data: (response as SuccessResponse).data,
+          errorMessage: '',
+        ),
+      );
+    } else if (response is ErrorResponse) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: (response as ErrorResponse).errorMessage,
+        ),
+      );
+    }
   }
 }

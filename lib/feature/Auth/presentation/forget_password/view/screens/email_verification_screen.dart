@@ -51,13 +51,13 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
           setState(() => hasError = true);
           pinController.triggerError();
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
+            SnackBar(content: Text(state.errorMessage), backgroundColor: colors.error),
           );
         }
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: colors.white,
           appBar: const CustomAppBar(title: 'Password'),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.h),

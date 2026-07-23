@@ -37,6 +37,16 @@ import '../../feature/Auth/presentation/login/view_model/login_view_model.dart'
     as _i1000;
 import '../../feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart'
     as _i735;
+import '../../feature/Home/data/api/home_api_client.dart' as _i602;
+import '../../feature/Home/data/data_source/remote/home_remote_datasource.dart'
+    as _i546;
+import '../../feature/Home/data/data_source/remote/home_remote_datasource_impl.dart'
+    as _i82;
+import '../../feature/Home/data/repo/home_repo_impl.dart' as _i585;
+import '../../feature/Home/domain/repo/home_repo.dart' as _i440;
+import '../../feature/Home/domain/usecase/subject_usecase.dart' as _i773;
+import '../../feature/Home/presentation/view_model/home_view_model.dart'
+    as _i413;
 import '../modules/dio_module.dart' as _i948;
 import '../network/auth_interceptors.dart' as _i466;
 import '../network/safe_call.dart' as _i185;
@@ -67,8 +77,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i361.Dio>(
       () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
     );
+    gh.lazySingleton<_i602.HomeApiClient>(
+      () => apiModule.provideHomeApiClient(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i39.AuthApiClient>(
       () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
+    );
+    gh.factory<_i546.HomeRemoteDatasource>(
+      () => _i82.HomeRemoteDatasourceImpl(gh<_i602.HomeApiClient>()),
     );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),
@@ -77,6 +93,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i716.AuthRepositoryImpl(
         gh<_i345.AuthRemoteDatasource>(),
         gh<_i505.AuthLocalDatasource>(),
+        gh<_i185.SafeCall>(),
+      ),
+    );
+    gh.factory<_i440.HomeRepo>(
+      () => _i585.HomeRepoImpl(
+        gh<_i546.HomeRemoteDatasource>(),
         gh<_i185.SafeCall>(),
       ),
     );
@@ -95,8 +117,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i866.VerifyCodeUseCase>(
       () => _i866.VerifyCodeUseCase(gh<_i847.AuthRepository>()),
     );
+    gh.factory<_i773.SubjectUseCase>(
+      () => _i773.SubjectUseCase(gh<_i440.HomeRepo>()),
+    );
     gh.factory<_i735.SignUpViewModel>(
       () => _i735.SignUpViewModel(gh<_i808.SignUpUseCase>()),
+    );
+    gh.factory<_i413.HomeViewModel>(
+      () => _i413.HomeViewModel(gh<_i773.SubjectUseCase>()),
     );
     gh.factory<_i1000.LoginViewModel>(
       () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),

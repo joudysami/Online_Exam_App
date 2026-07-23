@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,16 +12,20 @@ class AuthInterceptors implements Interceptor{
   void onError(DioException err, ErrorInterceptorHandler handler) {
     return handler.next(err);  }
 
-  @override
+ @override
 Future<void> onRequest(
   RequestOptions options,
   RequestInterceptorHandler handler,
 ) async {
-  final token = sharedPreferences.getString("token");
+  final token = sharedPreferences.getString("USER_TOKEN");
+
+  print("TOKEN = $token");
 
   if (token != null && token.isNotEmpty) {
-    options.headers['Authorization'] = 'Bearer $token';
+   options.headers['token'] = token;
   }
+
+  print(options.headers);
 
   handler.next(options);
 }
