@@ -11,11 +11,14 @@ class HomeRepoImpl implements HomeRepo {
     final SafeCall safeCall;
   HomeRepoImpl(this.homeRemoteDatasource, this.safeCall);
   @override
+  //success with subject non_empty with 5 sub
+  // success with subject empty 
+  //error
   Future<BaseResponse<List<SubjectEntity>>> getAllSubjects() {
     return safeCall.safeApiCall(() async {
       final response = await homeRemoteDatasource.geAllSubjects();
       return response.subjects
-            ?.map((subject) => subject.toDomain())
+            ?.map((subjects) => subjects.toDomain())
             .toList() ??
         [];
     });
