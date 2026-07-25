@@ -12,6 +12,7 @@ import 'package:exam_app/feature/Home/presentation/view/screens/explore_screen.d
 import 'package:exam_app/feature/Home/presentation/view/screens/home_screen.dart';
 import 'package:exam_app/feature/Home/presentation/view_model/home_event.dart';
 import 'package:exam_app/feature/Home/presentation/view_model/home_view_model.dart';
+import 'package:exam_app/feature/Profile/presentation/view/screens/change_password_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -53,7 +54,6 @@ class AppRoutes {
         ),
       ),
 
-      // Forget Password flow - wrapped in a shared ShellRoute to share one Cubit
       ShellRoute(
         builder: (context, state, child) => BlocProvider(
           create: (_) => getIt<ForgetPasswordViewModel>(),
@@ -91,6 +91,11 @@ class AppRoutes {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: AppRoutesNamed.changePassword,
+        name: AppRoutesNamed.changePassword,
+        builder: (context, state) => const ChangePasswordScreen(),
       ),
     ],
   );

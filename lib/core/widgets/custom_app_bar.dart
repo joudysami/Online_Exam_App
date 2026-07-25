@@ -23,7 +23,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(AppIcons.arrowBack, color: colors.black, size: 25.w),
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Icon(AppIcons.arrowBack, color: colors.black, size: 25.w),
+            ),
             SizedBox(width: 10.w),
             Text(
               widget.title,
