@@ -1,3 +1,4 @@
+import 'package:exam_app/feature/Home/domain/entity/exam_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'exams_response.g.dart';
@@ -8,11 +9,7 @@ class ExamsResponse {
   final Metadata? metadata;
   final List<Exam>? exams;
 
-  ExamsResponse({
-    this.message,
-    this.metadata,
-    this.exams,
-  });
+  ExamsResponse({this.message, this.metadata, this.exams});
 
   factory ExamsResponse.fromJson(Map<String, dynamic> json) =>
       _$ExamsResponseFromJson(json);
@@ -26,11 +23,7 @@ class Metadata {
   final int? numberOfPages;
   final int? limit;
 
-  Metadata({
-    this.currentPage,
-    this.numberOfPages,
-    this.limit,
-  });
+  Metadata({this.currentPage, this.numberOfPages, this.limit});
 
   factory Metadata.fromJson(Map<String, dynamic> json) =>
       _$MetadataFromJson(json);
@@ -58,6 +51,16 @@ class Exam {
     this.active,
     this.createdAt,
   });
+  ExamEntity toDomain() {
+    return ExamEntity(
+      id: id??'',
+      title: title??'',
+      duration: '${duration ?? 0} Minutes',
+      numberOfQuestions: numberOfQuestions??0,
+      imagePath: '',
+      category: '',
+    );
+  }
 
   factory Exam.fromJson(Map<String, dynamic> json) => _$ExamFromJson(json);
 

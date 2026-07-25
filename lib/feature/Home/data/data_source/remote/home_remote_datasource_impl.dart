@@ -8,8 +8,8 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
    final HomeApiClient homeApiClient;
    HomeRemoteDatasourceImpl(this.homeApiClient);
   @override
-  Future<ExamsResponse> getExams(String subjectId) async {
-    return await homeApiClient.getExams(subjectId);
+  Future<ExamsResponse> getAllExams(String subjectId) async {
+    return await homeApiClient.getAllExams(subjectId);
   }
 
   @override

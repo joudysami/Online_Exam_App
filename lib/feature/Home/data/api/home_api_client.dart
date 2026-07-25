@@ -13,7 +13,7 @@ factory HomeApiClient(Dio dio, {String baseUrl}) = _HomeApiClient;
 Future<SubjectsResponse> geAllSubjects( @Header("Authorization") String token,);
 
   @GET("api/v1/exams")
-  Future<ExamsResponse> getExams(
+  Future<ExamsResponse> getAllExams(
     @Query("subject") String subjectId,
   );
 }

@@ -2,10 +2,11 @@ import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/feature/Home/domain/entity/subject_entity.dart';
-import 'package:exam_app/feature/Home/presentation/view/widgets/search_text_field.dart';
-import 'package:exam_app/feature/Home/presentation/view/widgets/subject_card.dart';
-import 'package:exam_app/feature/Home/presentation/view_model/home_event.dart';
-import 'package:exam_app/feature/Home/presentation/view_model/home_view_model.dart';
+import 'package:exam_app/feature/Home/presentation/exams/view/screens/exams_screen.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view/widgets/search_text_field.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view/widgets/subject_card.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view_model/subject_event.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view_model/subject_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,13 +17,12 @@ class ExploreScreen extends StatefulWidget {
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
-
 class _ExploreScreenState extends State<ExploreScreen> {
-  late final HomeViewModel homeViewModel = getIt<HomeViewModel>();
+  late final SubjectViewModel subjectViewModel = getIt<SubjectViewModel>();
   @override
   void initState() {
     super.initState();
-    homeViewModel.doEvent(GetAllSubject());
+    subjectViewModel.doEvent(GetAllSubject());
   }
 
   @override
@@ -56,8 +56,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           ),
           SizedBox(height: 16.h),
-          BlocBuilder<HomeViewModel, BaseState<List<SubjectEntity>>>(
-            bloc: homeViewModel,
+          BlocBuilder<SubjectViewModel, BaseState<List<SubjectEntity>>>(
+            bloc: subjectViewModel,
             builder: (context, state) {
               if (state.isLoading) {
                 return const Center(child: CircularProgressIndicator());
@@ -65,17 +65,28 @@ class _ExploreScreenState extends State<ExploreScreen> {
               if (state.data != null) {
                 final subjects = state.data!;
 
-                return ListView.builder(
+                return ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(height: 10.h);
+                  },
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: subjects.length,
                   itemBuilder: (context, index) {
                     final subject = subjects[index];
-
                     return SubjectCard(
                       title: subject.name,
                       icon: subject.icon,
                       onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ExamsScreen(
+                              subjectId: subject.id,
+                              subjectName: subject.name,
+                              subjectIcon: subject.icon,
+                            ),
+                          ),
+                        );
                       },
                     );
                   },

@@ -22,8 +22,10 @@ class HomeRepoImpl implements HomeRepo {
   }
 
   @override
-  Future<BaseResponse<ExamsResponse>> getExams(String subjectId) {
-    // TODO: implement getExams
-    throw UnimplementedError();
+  Future<BaseResponse<ExamsResponse>> getAllExams(String subjectId) {
+    return safeCall.safeApiCall(() async {
+      final response = await homeRemoteDatasource.getAllExams(subjectId);
+      return response;
+    });
   }
 } 

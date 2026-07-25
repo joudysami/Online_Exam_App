@@ -50,7 +50,7 @@ class _HomeApiClient implements HomeApiClient {
   }
 
   @override
-  Future<ExamsResponse> getExams(String subjectId) async {
+  Future<ExamsResponse> getAllExams(String subjectId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'subject': subjectId};
     final _headers = <String, dynamic>{};

@@ -1,0 +1,116 @@
+import 'package:exam_app/config/Di/di.dart';
+import 'package:exam_app/config/base/base_state.dart';
+import 'package:exam_app/core/theme/app_colors.dart';
+import 'package:exam_app/feature/Home/domain/entity/exam_entity.dart';
+import 'package:exam_app/feature/Home/presentation/exams/view/widgets/exam_card.dart';
+import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_event.dart';
+import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
+class ExamsScreen extends StatefulWidget {
+  final String subjectId;
+  final String subjectName;
+  final String subjectIcon;
+  const ExamsScreen({
+    super.key,
+    required this.subjectId,
+    required this.subjectName,
+    required this.subjectIcon,
+  });
+
+  @override
+  State<ExamsScreen> createState() => _ExamsScreenState();
+}
+
+class _ExamsScreenState extends State<ExamsScreen> {
+  late final ExamsViewModel viewModel = getIt<ExamsViewModel>();
+  @override
+  void initState() {
+    super.initState();
+    viewModel.doEvent(
+      GetAllExams(
+        widget.subjectId,
+        widget.subjectName));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Scaffold(
+      backgroundColor: colors.white,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 20.r,
+                      color: colors.black,
+                    ),
+                    onPressed: () {
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      } else {
+                        context.pop();
+                      }
+                    },
+                  ),
+                  Text(
+                    widget.subjectName,
+                    style: TextStyle(
+                      color: colors.black,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            BlocBuilder<ExamsViewModel, BaseState<List<ExamEntity>>>(
+              bloc: viewModel,
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state.errorMessage.isNotEmpty) {
+                  return Center(child: Text(state.errorMessage));
+                }
+                if (state.data != null) {
+                  final exams = state.data!;
+                  return ListView.separated(
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(height: 10.h);
+                    },
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: exams.length,
+                    itemBuilder: (context, index) {
+                      final exam = exams[index];
+                      return ExamCard(
+                        title: exam.title,
+                        duration: exam.duration.toString(),
+                        numberOfQuestions: exam.numberOfQuestions.toString(),
+                        subjectIcon: widget.subjectIcon,
+                        onTap: () {},
+                      );
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

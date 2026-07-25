@@ -1,7 +1,7 @@
 import 'package:exam_app/core/theme/app_colors.dart';
-import 'package:exam_app/feature/Home/presentation/view/screens/explore_screen.dart';
-import 'package:exam_app/feature/Home/presentation/view/screens/profile_screen.dart';
-import 'package:exam_app/feature/Home/presentation/view/screens/result_screen.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view/screens/explore_screen.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view/screens/profile_screen.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view/screens/result_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

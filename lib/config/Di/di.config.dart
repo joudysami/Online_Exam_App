@@ -44,9 +44,12 @@ import '../../feature/Home/data/data_source/remote/home_remote_datasource_impl.d
     as _i82;
 import '../../feature/Home/data/repo/home_repo_impl.dart' as _i585;
 import '../../feature/Home/domain/repo/home_repo.dart' as _i440;
+import '../../feature/Home/domain/usecase/exams_usecase.dart' as _i597;
 import '../../feature/Home/domain/usecase/subject_usecase.dart' as _i773;
-import '../../feature/Home/presentation/view_model/home_view_model.dart'
-    as _i413;
+import '../../feature/Home/presentation/exams/view_model/exam_view_model.dart'
+    as _i696;
+import '../../feature/Home/presentation/subjects/view_model/subject_view_model.dart'
+    as _i45;
 import '../modules/dio_module.dart' as _i948;
 import '../network/auth_interceptors.dart' as _i466;
 import '../network/safe_call.dart' as _i185;
@@ -117,14 +120,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i866.VerifyCodeUseCase>(
       () => _i866.VerifyCodeUseCase(gh<_i847.AuthRepository>()),
     );
+    gh.factory<_i597.GetExamsUseCase>(
+      () => _i597.GetExamsUseCase(gh<_i440.HomeRepo>()),
+    );
     gh.factory<_i773.SubjectUseCase>(
       () => _i773.SubjectUseCase(gh<_i440.HomeRepo>()),
     );
     gh.factory<_i735.SignUpViewModel>(
       () => _i735.SignUpViewModel(gh<_i808.SignUpUseCase>()),
     );
-    gh.factory<_i413.HomeViewModel>(
-      () => _i413.HomeViewModel(gh<_i773.SubjectUseCase>()),
+    gh.factory<_i696.ExamsViewModel>(
+      () => _i696.ExamsViewModel(gh<_i597.GetExamsUseCase>()),
     );
     gh.factory<_i1000.LoginViewModel>(
       () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
@@ -134,6 +140,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i486.ForgetPasswordUseCase>(),
         gh<_i866.VerifyCodeUseCase>(),
         gh<_i454.ResetPasswordUseCase>(),
+      ),
+    );
+    gh.factory<_i45.SubjectViewModel>(
+      () => _i45.SubjectViewModel(
+        gh<_i773.SubjectUseCase>(),
+        gh<_i597.GetExamsUseCase>(),
       ),
     );
     return this;

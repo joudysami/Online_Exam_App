@@ -1,15 +1,18 @@
 import 'package:exam_app/config/base/base_response.dart';
 import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/feature/Home/domain/entity/subject_entity.dart';
+import 'package:exam_app/feature/Home/domain/usecase/exams_usecase.dart';
 import 'package:exam_app/feature/Home/domain/usecase/subject_usecase.dart';
-import 'package:exam_app/feature/Home/presentation/view_model/home_event.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view_model/subject_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class HomeViewModel extends Cubit<BaseState<List<SubjectEntity>>> {
+class SubjectViewModel extends Cubit<BaseState<List<SubjectEntity>>> {
   final SubjectUseCase subjectUseCase;
-  HomeViewModel(this.subjectUseCase) : super(BaseState<List<SubjectEntity>>());
+  final GetExamsUseCase examsUseCase;
+  SubjectViewModel(this.subjectUseCase, this.examsUseCase)
+      : super(BaseState<List<SubjectEntity>>());
 
 void doEvent(SubjectEvent event){
     switch(event) {
@@ -17,6 +20,7 @@ void doEvent(SubjectEvent event){
       _getAllSubject();
       
         break;
+       
     }
   }
 
@@ -25,16 +29,15 @@ void doEvent(SubjectEvent event){
 
     final response = await subjectUseCase();
    
-    if (response is SuccessResponse<List<SubjectEntity>>) {
-      final success = response as SuccessResponse<List<SubjectEntity>>;
-      print(success.data.first.icon);
+     if (response is SuccessResponse) {
       emit(
         state.copyWith(
           isLoading: false,
-          data: success.data,
+          data: (response as SuccessResponse).data,
           errorMessage: '',
         ),
       );
+   
        
 
     } else if (response is ErrorResponse) {
@@ -46,4 +49,5 @@ void doEvent(SubjectEvent event){
       );
     }
   }
+
 }
