@@ -1,51 +1,53 @@
+import 'package:exam_app/core/constant/app_string.dart';
+
 class AppValidators {
   AppValidators._();
 
  static String? usernameValidator(String? value, {String field = 'Name'}) {
     if (value == null || value.trim().isEmpty) {
-      return "$field is required";
+      return AppString.fieldIsRequired(field);
     }
     if (value.length < 4) {
-      return "$field must be at least 4 characters";
+      return AppString.fieldMinLength(field, 4);
     }
     if (value.contains(" ")) {
-      return "$field cannot contain spaces";
+      return AppString.fieldNoSpaces(field);
     }
     final regex = RegExp(r'^[a-zA-Z0-9_]+$');
     if (!regex.hasMatch(value)) {
-      return "Only letters, numbers and _ are allowed";
+      return AppString.onlyLettersNumbersUnderscore;
     }
     return null;
   }
 
   static String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
-     return 'Please enter your email';
+     return AppString.pleaseEnterYourEmail;
     }
     final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!regex.hasMatch(value.trim())) {
-      return 'Please enter a valid email';
+      return AppString.pleaseEnterValidEmail;
     }
     return null;
   }
 
   static String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return AppString.passwordIsRequired;
     }
     final RegExp passwordRegExp = RegExp(r'^(?=.*[A-Z]).{8,}$');
     if (!passwordRegExp.hasMatch(value)) {
-      return 'Password must be 8+ chars and 1 uppercase letter';
+      return AppString.passwordRequirement;
     }
     return null;
   }
 
   static String? confirmPasswordValidator(String? value, String password) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return AppString.passwordIsRequired;
     }
     if (value != password) {
-      return 'Passwords do not match';
+      return AppString.passwordsDoNotMatch;
     }
     
     return null;
@@ -53,23 +55,23 @@ class AppValidators {
 
   static String? phoneValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Phone number is required";
+      return AppString.phoneNumberIsRequired;
     }
     final regex = RegExp(r'^01[0125][0-9]{8}$');
     if (!regex.hasMatch(value)) {
-      return "Enter a valid Egyptian phone number";
+      return AppString.validEgyptianPhone;
     }
     return null;
   }
   static String? resetPasswordValidator(String? value) {
   if (value == null || value.trim().isEmpty) {
-    return 'Password is required';
+    return AppString.passwordIsRequired;
   }
 
   final regex = RegExp(r'^(?=.*[A-Z])(?=.*\d).{6,}$');
 
   if (!regex.hasMatch(value)) {
-    return 'Password must contain at least 6 characters, one uppercase letter and one number';
+    return AppString.resetPasswordRequirement;
   }
 
   return null;

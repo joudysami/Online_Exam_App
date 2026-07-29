@@ -1,1 +1,1 @@
-class HomeLocalDatasource {}
+abstract interface class HomeLocalDatasource {}

@@ -1,3 +1,4 @@
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -77,7 +78,7 @@ class ExamCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    '${numberOfQuestions} Question',
+                    AppString.questionsCount(numberOfQuestions),
                     style: TextStyle(
                       color: colors.grey,
                       fontSize: 14.sp,

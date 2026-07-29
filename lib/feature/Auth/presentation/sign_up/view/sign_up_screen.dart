@@ -2,6 +2,7 @@ import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
@@ -61,8 +62,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final colors = context.colors;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: CustomAppBar(title: 'Sign Up'),
-      body: BlocConsumer<SignUpViewModel, BaseState<AuthEntity>>(
+      appBar: CustomAppBar(title: AppString.signUp),
+      body: BlocListener<SignUpViewModel, BaseState<AuthEntity>>(
         bloc: singUpViewModel,
         listener: (context, state) {
           if (state.data != null) {
@@ -76,176 +77,178 @@ class _SignUpScreenState extends State<SignUpScreen> {
             );
           }
         },
-        builder: (context, state) {
-          return SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 1. User name
-                    CustomTextField(
-                      label: 'User name',
-                      hint: 'Enter your user name',
-                      validator: (value) => AppValidators.usernameValidator(
-                        value,
-                        field: 'userName',
-                      ),
-                      controller: _userNameController,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextField(
+                    label: AppString.userName,
+                    hint: AppString.enterYourUserName,
+                    validator: (value) => AppValidators.usernameValidator(
+                      value,
+                      field: 'userName',
                     ),
-                    SizedBox(height: 16.h),
+                    controller: _userNameController,
+                  ),
+                  SizedBox(height: 16.h),
 
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextField(
-                            label: 'First name',
-                            hint: 'Enter your first name',
-                            validator: (value) =>
-                                AppValidators.usernameValidator(
-                                  value,
-                                  field: 'firstName',
-                                ),
-                            controller: _firstNameController,
-                          ),
-                        ),
-                        SizedBox(width: 16.w),
-                        Expanded(
-                          child: CustomTextField(
-                            label: 'Last name',
-                            hint: 'Enter your last name',
-                            validator: (value) =>
-                                AppValidators.usernameValidator(
-                                  value,
-                                  field: 'lastName',
-                                ),
-                            controller: _lastNameController,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-
-                    CustomTextField(
-                      label: 'Email',
-                      hint: 'Enter your email',
-                      validator: AppValidators.emailValidator,
-                      controller: _emailController,
-                    ),
-                    SizedBox(height: 16.h),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextField(
-                            label: 'Password',
-                            hint: 'Enter your password',
-                            validator: AppValidators.passwordValidator,
-                            controller: _passwordController,
-                          ),
-                        ),
-                        SizedBox(width: 16.w),
-                        Expanded(
-                          child: CustomTextField(
-                            label: 'Confirm Password',
-                            hint: 'Confirm password',
-                            validator: (value) {
-                              return AppValidators.confirmPasswordValidator(
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          label: AppString.firstName,
+                          hint: AppString.enterYourFirstName,
+                          validator: (value) =>
+                              AppValidators.usernameValidator(
                                 value,
-                                _passwordController.text,
-                              );
-                            },
-                            controller: _confirmPasswordController,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-
-                    CustomTextField(
-                      label: 'Phone Number',
-                      hint: 'Enter your phone number',
-                      validator: AppValidators.phoneValidator,
-                      controller: _phoneNumberController,
-                    ),
-
-                    SizedBox(height: 48.h),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: state.isLoading
-                          ? Center(
-                              child: CircularProgressIndicator(
-                                color: colors.blue,
+                                field: 'firstName',
                               ),
-                            )
-                          : CustomButton(
-                              onTap: () {
-                                if (_formKey.currentState!.validate()) {
-                                  singUpViewModel.doEvent(
-                                    SingUp(
-                                      SignUpRequest(
-                                        username: _userNameController.text
-                                            .trim(),
-                                        firstName: _firstNameController.text
-                                            .trim(),
-                                        lastName: _lastNameController.text
-                                            .trim(),
-                                        email: _emailController.text.trim(),
-                                        password: _passwordController.text,
-                                        rePassword:
-                                            _confirmPasswordController.text,
-                                        phone: _phoneNumberController.text
-                                            .trim(),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              text: "Signup",
-                            ),
-                    ),
-                    SizedBox(height: 16.h),
+                          controller: _firstNameController,
+                        ),
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: CustomTextField(
+                          label: AppString.lastName,
+                          hint: AppString.enterYourLastName,
+                          validator: (value) =>
+                              AppValidators.usernameValidator(
+                                value,
+                                field: 'lastName',
+                              ),
+                          controller: _lastNameController,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Already have an account? ',
-                          style: TextStyle(
-                            color: colors.black,
-                            fontSize: 15.sp,
-                          ),
+                  CustomTextField(
+                    label: AppString.email,
+                    hint: AppString.enterYourEmail,
+                    validator: AppValidators.emailValidator,
+                    controller: _emailController,
+                  ),
+                  SizedBox(height: 16.h),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          label: AppString.password,
+                          hint: AppString.enterYourPassword,
+                          validator: AppValidators.passwordValidator,
+                          controller: _passwordController,
                         ),
-                        TextButton(
-                          onPressed: () {
-                            context.pushNamed(AppRoutesNamed.login);
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: CustomTextField(
+                          label: AppString.confirmPassword,
+                          hint: AppString.confirmPasswordHint,
+                          validator: (value) {
+                            return AppValidators.confirmPasswordValidator(
+                              value,
+                              _passwordController.text,
+                            );
                           },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              color: colors.blue,
-                              fontSize: 16.sp,
-                              decoration: TextDecoration.underline,
-                            ),
+                          controller: _confirmPasswordController,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
+
+                  CustomTextField(
+                    label: AppString.phoneNumber,
+                    hint: AppString.enterYourPhoneNumber,
+                    validator: AppValidators.phoneValidator,
+                    controller: _phoneNumberController,
+                  ),
+
+                  SizedBox(height: 48.h),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: BlocBuilder<SignUpViewModel, BaseState<AuthEntity>>(
+                      bloc: singUpViewModel,
+                      builder: (context, state) {
+                        return state.isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: colors.blue,
+                                ),
+                              )
+                            : CustomButton(
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    singUpViewModel.doEvent(
+                                      SingUp(
+                                        SignUpRequest(
+                                          username: _userNameController.text
+                                              .trim(),
+                                          firstName: _firstNameController.text
+                                              .trim(),
+                                          lastName: _lastNameController.text
+                                              .trim(),
+                                          email: _emailController.text.trim(),
+                                          password: _passwordController.text,
+                                          rePassword:
+                                              _confirmPasswordController.text,
+                                          phone: _phoneNumberController.text
+                                              .trim(),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                text: AppString.signupButton,
+                              );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppString.alreadyHaveAccount,
+                        style: TextStyle(
+                          color: colors.black,
+                          fontSize: 15.sp,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.pushNamed(AppRoutesNamed.login);
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          AppString.login,
+                          style: TextStyle(
+                            color: colors.blue,
+                            fontSize: 16.sp,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

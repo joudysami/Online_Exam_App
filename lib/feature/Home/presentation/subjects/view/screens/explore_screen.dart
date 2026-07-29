@@ -1,5 +1,6 @@
 import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/base/base_state.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/feature/Home/domain/entity/subject_entity.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view/screens/exams_screen.dart';
@@ -35,7 +36,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         children: [
           SizedBox(height: 8.h),
           Text(
-            'Survey',
+            AppString.survey,
             style: TextStyle(
               color: colors.blue[500],
               fontSize: 24.sp,
@@ -44,10 +45,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           ),
           SizedBox(height: 20.h),
-          SearchTextField(hintText: 'Search'),
+          SearchTextField(hintText: AppString.search),
           SizedBox(height: 28.h),
           Text(
-            'Browse by subject',
+            AppString.browseBySubject,
             style: TextStyle(
               color: colors.black,
               fontSize: 18.sp,
