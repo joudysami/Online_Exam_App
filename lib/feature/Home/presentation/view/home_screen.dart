@@ -1,3 +1,4 @@
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -7,11 +8,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text(AppString.home),
       ),
       body: const Center(
         child: Text(
-          'Welcome',
+          AppString.welcome,
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
