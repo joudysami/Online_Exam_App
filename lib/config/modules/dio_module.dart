@@ -7,7 +7,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 @module
 abstract class DioModule {
-  @singleton
+  @LazySingleton()
   Dio provideDio(AuthInterceptors authInterceptors) {
     Dio dio = Dio();
     dio.options = BaseOptions(

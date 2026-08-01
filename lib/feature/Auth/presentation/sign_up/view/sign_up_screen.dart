@@ -1,5 +1,3 @@
-import 'package:exam_app/config/Di/di.dart';
-import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/constant/app_string.dart';
@@ -8,8 +6,8 @@ import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
 import 'package:exam_app/feature/Auth/data/models/sign_up_request.dart';
-import 'package:exam_app/feature/Auth/domain/entity/auth_entity.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_event.dart';
+import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_state.dart';
 import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController _confirmPasswordController;
   late final TextEditingController _phoneNumberController;
   final _formKey = GlobalKey<FormState>();
-  late final SignUpViewModel singUpViewModel = getIt<SignUpViewModel>();
+  late final SignUpViewModel singUpViewModel;
 
   @override
   void initState() {
@@ -43,6 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _lastNameController = TextEditingController();
     _confirmPasswordController = TextEditingController();
     _phoneNumberController = TextEditingController();
+    singUpViewModel = context.read<SignUpViewModel>();
   }
 
   @override
@@ -63,15 +62,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: CustomAppBar(title: AppString.signUp),
-      body: BlocListener<SignUpViewModel, BaseState<AuthEntity>>(
-        bloc: singUpViewModel,
+      body: BlocListener<SignUpViewModel, SignUpState>(
         listener: (context, state) {
-          if (state.data != null) {
+          if (state.signUpState.data != null) {
             context.goNamed(AppRoutesNamed.home);
-          } else if (state.errorMessage.isNotEmpty) {
+          } else if (state.signUpState.errorMessage.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.errorMessage),
+                content: Text(state.signUpState.errorMessage),
                 backgroundColor: Colors.red,
               ),
             );
@@ -103,11 +101,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: CustomTextField(
                           label: AppString.firstName,
                           hint: AppString.enterYourFirstName,
-                          validator: (value) =>
-                              AppValidators.usernameValidator(
-                                value,
-                                field: 'firstName',
-                              ),
+                          validator: (value) => AppValidators.usernameValidator(
+                            value,
+                            field: 'firstName',
+                          ),
                           controller: _firstNameController,
                         ),
                       ),
@@ -116,11 +113,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: CustomTextField(
                           label: AppString.lastName,
                           hint: AppString.enterYourLastName,
-                          validator: (value) =>
-                              AppValidators.usernameValidator(
-                                value,
-                                field: 'lastName',
-                              ),
+                          validator: (value) => AppValidators.usernameValidator(
+                            value,
+                            field: 'lastName',
+                          ),
                           controller: _lastNameController,
                         ),
                       ),
@@ -175,10 +171,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   SizedBox(
                     width: double.infinity,
-                    child: BlocBuilder<SignUpViewModel, BaseState<AuthEntity>>(
-                      bloc: singUpViewModel,
+                    child: BlocBuilder<SignUpViewModel, SignUpState>(
                       builder: (context, state) {
-                        return state.isLoading
+                        return state.signUpState  .isLoading
                             ? Center(
                                 child: CircularProgressIndicator(
                                   color: colors.blue,
@@ -219,10 +214,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text(
                         AppString.alreadyHaveAccount,
-                        style: TextStyle(
-                          color: colors.black,
-                          fontSize: 15.sp,
-                        ),
+                        style: TextStyle(color: colors.black, fontSize: 15.sp),
                       ),
                       TextButton(
                         onPressed: () {

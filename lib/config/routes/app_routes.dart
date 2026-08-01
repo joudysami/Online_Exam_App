@@ -13,14 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
-  static const authRoutes = [
-    AppRoutesNamed.login,
-    AppRoutesNamed.signup,
-    AppRoutesNamed.forgetPassword,
-    AppRoutesNamed.emailVerification,
-    AppRoutesNamed.resetPassword,
-  ];
-
   static GoRouter goRouter = GoRouter(
     initialLocation: AppRoutesNamed.login,
     redirect: (context, state) {

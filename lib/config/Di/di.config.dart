@@ -40,7 +40,6 @@ import '../../feature/Auth/presentation/sign_up/view_model/sign_up_view_model.da
 import '../modules/dio_module.dart' as _i948;
 import '../network/auth_interceptors.dart' as _i466;
 import '../network/safe_call.dart' as _i185;
-import 'api_module.dart' as _i804;
 import 'shared_pref_module.dart' as _i451;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -52,7 +51,6 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final sharedPrefModule = _$SharedPrefModule();
     final dioModule = _$DioModule();
-    final apiModule = _$ApiModule();
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => sharedPrefModule.prefs,
       preResolve: true,
@@ -64,14 +62,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i505.AuthLocalDatasource>(
       () => _i868.AuthLocalDatasourceImpl(gh<_i460.SharedPreferences>()),
     );
-    gh.singleton<_i361.Dio>(
-      () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
-    );
-    gh.lazySingleton<_i39.AuthApiClient>(
-      () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
-    );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),
+    );
+    gh.lazySingleton<_i361.Dio>(
+      () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
     );
     gh.factory<_i847.AuthRepository>(
       () => _i716.AuthRepositoryImpl(
@@ -115,5 +110,3 @@ extension GetItInjectableX on _i174.GetIt {
 class _$SharedPrefModule extends _i451.SharedPrefModule {}
 
 class _$DioModule extends _i948.DioModule {}
-
-class _$ApiModule extends _i804.ApiModule {}

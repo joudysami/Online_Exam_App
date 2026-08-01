@@ -29,11 +29,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (response.token != null) {
         await localDatasource.saveToken(response.token!);
       }
-      return AuthEntity(
-        token: response.token,
-        email: response.user?.email,
-        username: response.user?.username,
-      );
+      return response.toDomain();
     });
   }
 
@@ -44,11 +40,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (response.token != null) {
         await localDatasource.saveToken(response.token!);
       }
-      return AuthEntity(
-        token: response.token,
-        email: response.user?.email,
-        username: response.user?.username,
-      );
+      return response.toDomain();
     });
   }
 

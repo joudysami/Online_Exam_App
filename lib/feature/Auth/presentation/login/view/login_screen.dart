@@ -1,4 +1,3 @@
-import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/constant/app_string.dart';
@@ -6,13 +5,12 @@ import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
-import 'package:exam_app/feature/Auth/domain/entity/auth_entity.dart';
 import 'package:exam_app/feature/Auth/presentation/login/view_model/login_event.dart';
+import 'package:exam_app/feature/Auth/presentation/login/view_model/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:exam_app/config/Di/di.dart';
 import '../view_model/login_view_model.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,13 +24,15 @@ class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _passwordController;
   bool isChecked = false;
   final _formKey = GlobalKey<FormState>();
-  late final LoginViewModel loginViewModel = getIt<LoginViewModel>();
+  late final LoginViewModel loginViewModel ;
 
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    loginViewModel = context.read<LoginViewModel>();
+
   }
 
   @override
@@ -51,14 +51,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
         body: BlocProvider(
           create: (context) => loginViewModel,
-          child: BlocListener<LoginViewModel, BaseState<AuthEntity>>(
+          child: BlocListener<LoginViewModel, LoginState>(
             listener: (context, state) {
-              if (state.data != null) {
+              if (state.loginState.data != null) {
                 context.goNamed(AppRoutesNamed.home);
-              } else if (state.errorMessage.isNotEmpty) {
+              } else if (state.loginState.errorMessage.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(state.errorMessage),
+                    content: Text(state.loginState.errorMessage),
                     backgroundColor: Colors.red,
                   ),
                 );
@@ -84,51 +84,60 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: AppValidators.passwordValidator,
                       controller: _passwordController,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Checkbox(
-                          activeColor: colors.blue,
-                          side: BorderSide(color: colors.grey, width: 1.5.w),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                          value: isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = value ?? false;
-                            });
-                          },
-                        ),
-                        Text(
-                          AppString.rememberMe,
-                          style: TextStyle(
-                            color: colors.black,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                        Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            context.pushNamed(AppRoutesNamed.forgetPassword);
-                          },
-                          child: Text(
-                            AppString.forgotPassword,
-                            style: TextStyle(
-                              color: colors.blue,
-                              fontSize: 14.sp,
-                              decoration: TextDecoration.underline,
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return Row(
+                          children: [
+                            Checkbox(
+                              activeColor: colors.blue,
+                              side: BorderSide(
+                                color: colors.grey,
+                                width: 1.5.w,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                              value: isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  isChecked = value!;
+                                });
+                              },
                             ),
-                          ),
-                        ),
-                      ],
+                            Text(
+                              AppString.rememberMe,
+                              style: TextStyle(
+                                color: colors.black,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                            Spacer(),
+                            TextButton(
+                              onPressed: () {
+                                context.pushNamed(
+                                  AppRoutesNamed.forgetPassword,
+                                );
+                              },
+                              child: Text(
+                                AppString.forgotPassword,
+                                style: TextStyle(
+                                  color: colors.blue,
+                                  fontSize: 14.sp,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
+
                     SizedBox(height: 16.h),
                     SizedBox(
                       width: double.infinity,
-                      child: BlocBuilder<LoginViewModel, BaseState<AuthEntity>>(
+                      child: BlocBuilder<LoginViewModel, LoginState>(
                         builder: (context, state) {
-                          return state.isLoading
+                          return state.loginState .isLoading
                               ? Center(
                                   child: CircularProgressIndicator(
                                     color: colors.blue,

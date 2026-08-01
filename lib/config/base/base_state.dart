@@ -1,8 +1,8 @@
 class BaseState<T> {
-  bool isLoading;
-  String errorMessage;
-  T? data;
-  BaseState({this.isLoading = false, this.errorMessage = '', this.data});
+ final bool isLoading;
+  final String errorMessage;
+  final T? data;
+ const BaseState({this.isLoading = false, this.errorMessage = '', this.data});
 
   BaseState<T> copyWith({bool? isLoading, String? errorMessage, T? data}) {
     return BaseState<T>(

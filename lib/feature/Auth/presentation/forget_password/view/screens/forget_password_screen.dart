@@ -1,5 +1,3 @@
-import 'package:exam_app/config/Di/di.dart';
-import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/constant/app_string.dart';
@@ -7,9 +5,9 @@ import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
-import 'package:exam_app/feature/Auth/domain/entity/auth_entity.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view/widgets/header_section.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_event.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_state.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,12 +24,13 @@ class ForgetPasswordScreen extends StatefulWidget {
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   late final TextEditingController emailController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-   late final ForgetPasswordViewModel viewModel = getIt<ForgetPasswordViewModel>();
+  late final ForgetPasswordViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
     emailController = TextEditingController();
+  viewModel = context.read<ForgetPasswordViewModel>();
   }
 
   @override
@@ -43,14 +42,13 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return BlocListener<ForgetPasswordViewModel, BaseState<AuthEntity>>(
-      bloc: viewModel,
+    return BlocListener<ForgetPasswordViewModel, ForgetPasswordState>(
       listener: (context, state) {
-        if (state.data != null) {
+        if (state.forgetPasswordState.data != null) {
           context.pushNamed(AppRoutesNamed.emailVerification);
-        } else if (state.errorMessage.isNotEmpty) {
+        } else if (state.forgetPasswordState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
+            SnackBar(content: Text(state.forgetPasswordState.errorMessage), backgroundColor: Colors.red),
           );
         }
       },
@@ -79,10 +77,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 SizedBox(height: 48.h),
                 SizedBox(
                   width: double.infinity,
-                  child: BlocBuilder<ForgetPasswordViewModel, BaseState<AuthEntity>>(
-                    bloc: viewModel,
+                  child: BlocBuilder<ForgetPasswordViewModel, ForgetPasswordState>(
+               
                     builder: (context, state) {
-                      return state.isLoading
+                      return state.forgetPasswordState.isLoading
                           ? Center(child: CircularProgressIndicator(color: colors.blue))
                           : CustomButton(
                               text: AppString.continueText,

@@ -11,3 +11,4 @@ sealed class ForgetPasswordEvent {}
     final String code;
   EmailVerification(this.code);
   }
+  class ClearVerifyCodeError extends ForgetPasswordEvent {}
