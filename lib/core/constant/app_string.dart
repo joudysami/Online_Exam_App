@@ -70,6 +70,18 @@ class AppString {
   static String fieldMinLength(String field, int length) =>
       '$field must be at least $length characters';
   static String fieldNoSpaces(String field) => '$field cannot contain spaces';
+
+  // Home Feature
+  static const String explore = 'Explore';
+  static const String result = 'Result';
+  static const String profile = 'Profile';
+  static const String survey = 'Survey';
+  static const String search = 'Search';
+  static const String browseBySubject = 'Browse by subject';
+  static const String question = 'Question';
+  static String questionsCount(dynamic count) => '$count Question';
+    static const String tokenKey = 'token';
+    static const String noExamsFound = 'No exams found';
 }
 
 

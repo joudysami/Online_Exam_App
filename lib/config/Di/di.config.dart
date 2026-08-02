@@ -37,9 +37,23 @@ import '../../feature/Auth/presentation/login/view_model/login_view_model.dart'
     as _i1000;
 import '../../feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart'
     as _i735;
+import '../../feature/Home/data/api/home_api_client.dart' as _i602;
+import '../../feature/Home/data/data_source/remote/home_remote_datasource.dart'
+    as _i546;
+import '../../feature/Home/data/data_source/remote/home_remote_datasource_impl.dart'
+    as _i82;
+import '../../feature/Home/data/repo/home_repo_impl.dart' as _i585;
+import '../../feature/Home/domain/repo/home_repo.dart' as _i440;
+import '../../feature/Home/domain/usecase/exams_use_case.dart' as _i363;
+import '../../feature/Home/domain/usecase/subject_use_case.dart' as _i480;
+import '../../feature/Home/presentation/exams/view_model/exam_view_model.dart'
+    as _i696;
+import '../../feature/Home/presentation/subjects/view_model/subject_view_model.dart'
+    as _i45;
 import '../modules/dio_module.dart' as _i948;
 import '../network/auth_interceptors.dart' as _i466;
 import '../network/safe_call.dart' as _i185;
+import 'api_module.dart' as _i804;
 import 'shared_pref_module.dart' as _i451;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -56,20 +70,32 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i185.SafeCall>(() => _i185.SafeCall());
-    gh.factory<_i466.AuthInterceptors>(
+    gh.lazySingleton<_i466.AuthInterceptors>(
       () => _i466.AuthInterceptors(gh<_i460.SharedPreferences>()),
     );
     gh.factory<_i505.AuthLocalDatasource>(
       () => _i868.AuthLocalDatasourceImpl(gh<_i460.SharedPreferences>()),
     );
-    gh.lazySingleton<_i361.Dio>(
+    gh.singleton<_i361.Dio>(
       () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
     );
     gh.lazySingleton<_i39.AuthApiClient>(
-      () => _i39.AuthApiClient(gh<_i361.Dio>(), baseUrl: gh<String>()),
+      () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i602.HomeApiClient>(
+      () => apiModule.provideHomeApiClient(gh<_i361.Dio>()),
+    );
+    gh.factory<_i546.HomeRemoteDatasource>(
+      () => _i82.HomeRemoteDatasourceImpl(gh<_i602.HomeApiClient>()),
     );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),
+    );
+    gh.factory<_i440.HomeRepo>(
+      () => _i585.HomeRepoImpl(
+        gh<_i546.HomeRemoteDatasource>(),
+        gh<_i185.SafeCall>(),
+      ),
     );
     gh.factory<_i847.AuthRepository>(
       () => _i716.AuthRepositoryImpl(
@@ -93,6 +119,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i866.VerifyCodeUseCase>(
       () => _i866.VerifyCodeUseCase(gh<_i847.AuthRepository>()),
     );
+    gh.factory<_i363.GetExamsUseCase>(
+      () => _i363.GetExamsUseCase(gh<_i440.HomeRepo>()),
+    );
+    gh.factory<_i480.GetSubjectsUseCase>(
+      () => _i480.GetSubjectsUseCase(gh<_i440.HomeRepo>()),
+    );
     gh.factory<_i735.SignUpViewModel>(
       () => _i735.SignUpViewModel(gh<_i808.SignUpUseCase>()),
     );
@@ -101,6 +133,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1000.LoginViewModel>(
       () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
+    );
+    gh.factory<_i1000.LoginViewModel>(
+      () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
+    );
+    gh.factory<_i696.ExamsViewModel>(
+      () => _i696.ExamsViewModel(gh<_i363.GetExamsUseCase>()),
+    );
+    gh.factory<_i45.SubjectViewModel>(
+      () => _i45.SubjectViewModel(gh<_i480.GetSubjectsUseCase>()),
     );
     gh.factory<_i997.ForgetPasswordViewModel>(
       () => _i997.ForgetPasswordViewModel(

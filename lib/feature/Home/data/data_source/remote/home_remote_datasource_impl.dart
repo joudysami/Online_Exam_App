@@ -1,0 +1,20 @@
+import 'package:exam_app/feature/Home/data/api/home_api_client.dart';
+import 'package:exam_app/feature/Home/data/data_source/remote/home_remote_datasource.dart';
+import 'package:exam_app/feature/Home/data/models/exams_response.dart';
+import 'package:exam_app/feature/Home/data/models/subjects_response.dart';
+import 'package:injectable/injectable.dart';
+
+@Injectable(as: HomeRemoteDatasource)
+class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
+  final HomeApiClient homeApiClient;
+  HomeRemoteDatasourceImpl(this.homeApiClient);
+  @override
+  Future<ExamsResponse> getAllExams(String subjectId) async {
+    return await homeApiClient.getAllExams();
+  }
+
+  @override
+  Future<SubjectsResponse> getAllSubjects() async {
+    return await homeApiClient.getAllSubjects();
+  }
+}

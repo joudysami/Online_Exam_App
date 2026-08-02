@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/network/auth_interceptors.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -11,11 +11,11 @@ abstract class DioModule {
   Dio provideDio(AuthInterceptors authInterceptors) {
     Dio dio = Dio();
     dio.options = BaseOptions(
-      receiveTimeout: Duration(seconds: 60),
-      connectTimeout: Duration(seconds: 60),
-      sendTimeout: Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 60),
+      sendTimeout: const Duration(seconds: 60),
     );
-    dio.interceptors.add(authInterceptors);
+    dio.interceptors.add(getIt<AuthInterceptors>());
     if (kDebugMode) {
       dio.interceptors.add(
         PrettyDioLogger(
@@ -29,6 +29,7 @@ abstract class DioModule {
         ),
       );
     }
+
     return dio;
   }
 }

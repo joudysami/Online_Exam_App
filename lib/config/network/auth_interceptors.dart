@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-@injectable
+@LazySingleton()
 class AuthInterceptors implements Interceptor{
 
   final SharedPreferences sharedPreferences;
@@ -11,18 +12,11 @@ class AuthInterceptors implements Interceptor{
     return handler.next(err);  }
 
   @override
-Future<void> onRequest(
-  RequestOptions options,
-  RequestInterceptorHandler handler,
-) async {
-  final token = sharedPreferences.getString("token");
-
-  if (token != null && token.isNotEmpty) {
-    options.headers['Authorization'] = 'Bearer $token';
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async{
+    String?token=sharedPreferences.getString(AppString.tokenKey);
+      options.headers['Authorization'] = 'Bearer $token';  
+          return handler.next(options);
   }
-
-  handler.next(options);
-}
 
   @override
   void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
