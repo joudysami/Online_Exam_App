@@ -2,6 +2,7 @@ import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
@@ -37,13 +38,13 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return BlocConsumer<ForgetPasswordViewModel, BaseState<AuthEntity>>(
+    return BlocListener<ForgetPasswordViewModel, BaseState<AuthEntity>>(
       bloc: viewModel,
       listener: (context, state) {
-        if (state.data!=null) {
+        if (state.data != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Password reset successfully!'),
+              content: Text(AppString.passwordResetSuccessfully),
               backgroundColor: Colors.green,
             ),
           );
@@ -54,64 +55,67 @@ class ResetPasswordScreenState extends State<ResetPasswordScreen> {
           );
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: colors.white,
-          appBar: CustomAppBar(title: 'Password'),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.h),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 24.h),
-                  const HeaderSection(
-                    title: 'Reset password',
-                    subtitle: 'Password must not be empty and must contain\n6 characters with upper case letter and one\nnumber at least',
+      child: Scaffold(
+        backgroundColor: colors.white,
+        appBar: CustomAppBar(title: AppString.password),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 24.h),
+                const HeaderSection(
+                  title: AppString.resetPasswordTitle,
+                  subtitle: AppString.resetPasswordSubtitle,
+                ),
+                SizedBox(height: 32.h),
+                CustomTextField(
+                  label: AppString.newPassword,
+                  hint: AppString.enterYourPassword,
+                  controller: passwordController,
+                  obscureText: true,
+                  validator: AppValidators.resetPasswordValidator,
+                ),
+                SizedBox(height: 24.h),
+                CustomTextField(
+                  label: AppString.confirmPassword,
+                  hint: AppString.confirmPasswordHint,
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  validator: (value) => AppValidators.confirmPasswordValidator(
+                    value,
+                    passwordController.text,
                   ),
-                  SizedBox(height: 32.h),
-                  CustomTextField(
-                    label: 'New password',
-                    hint: 'Enter your password',
-                    controller: passwordController,
-                    obscureText: true,
-                    validator: AppValidators.resetPasswordValidator,
+                ),
+                SizedBox(height: 48.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: BlocBuilder<ForgetPasswordViewModel, BaseState<AuthEntity>>(
+                    bloc: viewModel,
+                    builder: (context, state) {
+                      return state.isLoading
+                          ? Center(child: CircularProgressIndicator(color: colors.blue))
+                          : CustomButton(
+                              text: AppString.continueText,
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                 viewModel.doEvent(ResetPassword(
+                                    passwordController.text,
+                                 ));
+                                }
+                              },
+                            );
+                    },
                   ),
-                  SizedBox(height: 24.h),
-                  CustomTextField(
-                    label: 'Confirm password',
-                    hint: 'Confirm password',
-                    controller: confirmPasswordController,
-                    obscureText: true,
-                    validator: (value) => AppValidators.confirmPasswordValidator(
-                      value,
-                      passwordController.text,
-                    ),
-                  ),
-                  SizedBox(height: 48.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: state.isLoading
-                        ? Center(child: CircularProgressIndicator(color: colors.blue))
-                        : CustomButton(
-                            text: 'Continue',
-                            onTap: () {
-                              if (_formKey.currentState!.validate()) {
-                               viewModel.doEvent(ResetPassword(
-                                  passwordController.text,
-                               ));
-                              }
-                            },
-                          ),
-                  ),
-                  SizedBox(height: 32.h),
-                ],
-              ),
+                ),
+                SizedBox(height: 32.h),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
@@ -42,10 +43,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return BlocConsumer<ForgetPasswordViewModel, BaseState<AuthEntity>>(
+    return BlocListener<ForgetPasswordViewModel, BaseState<AuthEntity>>(
       bloc: viewModel,
       listener: (context, state) {
-          if (state.data != null) {
+        if (state.data != null) {
           context.pushNamed(AppRoutesNamed.emailVerification);
         } else if (state.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -53,52 +54,55 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           );
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: colors.white,
-          appBar: CustomAppBar(title: 'Password'),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.h),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 40.h),
-                  HeaderSection(
-                    title: 'Forget password',
-                    subtitle: 'Please enter your email associated to\nyour account',
+      child: Scaffold(
+        backgroundColor: colors.white,
+        appBar: CustomAppBar(title: AppString.password),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 40.h),
+                HeaderSection(
+                  title: AppString.forgetPasswordTitle,
+                  subtitle: AppString.forgetPasswordSubtitle,
+                ),
+                SizedBox(height: 32.h),
+                CustomTextField(
+                  label: AppString.email,
+                  hint: AppString.enterYourEmail,
+                  validator: AppValidators.emailValidator,
+                  controller: emailController,
+                ),
+                SizedBox(height: 48.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: BlocBuilder<ForgetPasswordViewModel, BaseState<AuthEntity>>(
+                    bloc: viewModel,
+                    builder: (context, state) {
+                      return state.isLoading
+                          ? Center(child: CircularProgressIndicator(color: colors.blue))
+                          : CustomButton(
+                              text: AppString.continueText,
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  viewModel.doEvent(ForgetPassword(
+                                    emailController.text.trim(),
+                                  ));
+                                }
+                              },
+                            );
+                    },
                   ),
-                  SizedBox(height: 32.h),
-                  CustomTextField(
-                    label: 'Email',
-                    hint: 'Enter your email',
-                    validator: AppValidators.emailValidator,
-                    controller: emailController,
-                  ),
-                  SizedBox(height: 48.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: state.isLoading
-                        ? Center(child: CircularProgressIndicator(color: colors.blue))
-                        : CustomButton(
-                            text: 'Continue',
-                            onTap: () {
-                              if (_formKey.currentState!.validate()) {
-                                viewModel.doEvent(ForgetPassword(
-                                  emailController.text.trim(),
-                                ));
-                              }
-                            },
-                          ),
-                  ),
-                  SizedBox(height: 32.h),
-                ],
-              ),
+                ),
+                SizedBox(height: 32.h),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

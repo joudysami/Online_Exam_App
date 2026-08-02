@@ -1,6 +1,7 @@
 import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
@@ -46,11 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final colors = context.colors;
     return SafeArea(
       child: Scaffold(
-        appBar: CustomAppBar(title: 'Login'),
+        appBar: CustomAppBar(title: AppString.login),
 
         body: BlocProvider(
-         create: (context) => loginViewModel,
-          child: BlocConsumer<LoginViewModel, BaseState<AuthEntity>>(
+          create: (context) => loginViewModel,
+          child: BlocListener<LoginViewModel, BaseState<AuthEntity>>(
             listener: (context, state) {
               if (state.data != null) {
                 context.goNamed(AppRoutesNamed.home);
@@ -63,120 +64,122 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               }
             },
-            builder: (context, state) {
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomTextField(
-                        label: 'Email',
-                        hint: 'Enter your email',
-                        validator: AppValidators.emailValidator,
-                        controller: _emailController,
-                      ),
-                      SizedBox(height: 16.h),
-                      CustomTextField(
-                        label: 'Password',
-                        hint: 'Enter your password',
-                        validator: AppValidators.passwordValidator,
-                        controller: _passwordController,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            activeColor: colors.blue,
-                            side: BorderSide(color: colors.grey, width: 1.5.w),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            value: isChecked,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isChecked = value ?? false;
-                              });
-                            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomTextField(
+                      label: AppString.email,
+                      hint: AppString.enterYourEmail,
+                      validator: AppValidators.emailValidator,
+                      controller: _emailController,
+                    ),
+                    SizedBox(height: 16.h),
+                    CustomTextField(
+                      label: AppString.password,
+                      hint: AppString.enterYourPassword,
+                      validator: AppValidators.passwordValidator,
+                      controller: _passwordController,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          activeColor: colors.blue,
+                          side: BorderSide(color: colors.grey, width: 1.5.w),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.r),
                           ),
-                          Text(
-                            'Remember me',
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = value ?? false;
+                            });
+                          },
+                        ),
+                        Text(
+                          AppString.rememberMe,
+                          style: TextStyle(
+                            color: colors.black,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            context.pushNamed(AppRoutesNamed.forgetPassword);
+                          },
+                          child: Text(
+                            AppString.forgotPassword,
                             style: TextStyle(
-                              color: colors.black,
+                              color: colors.blue,
                               fontSize: 14.sp,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
-                          Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              context.pushNamed(AppRoutesNamed.forgetPassword);
-                            },
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: colors.blue,
-                                fontSize: 14.sp,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: BlocBuilder<LoginViewModel, BaseState<AuthEntity>>(
+                        builder: (context, state) {
+                          return state.isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: colors.blue,
+                                  ),
+                                )
+                              : CustomButton(
+                                  text: AppString.login,
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      loginViewModel.doEvent(
+                                        Login(
+                                          email: _emailController.text,
+                                          password: _passwordController.text,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppString.dontHaveAccount,
+                          style: TextStyle(
+                            color: colors.black,
+                            fontSize: 15.sp,
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 16.h),
-                      SizedBox(
-                        width: double.infinity,
-                        child: state.isLoading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  color: colors.blue,
-                                ),
-                              )
-                            : CustomButton(
-                                text: "Login",
-                                onTap: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    loginViewModel.doEvent(
-                                      Login(
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Don\'t have an account?',
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context.pushNamed(AppRoutesNamed.signup);
+                          },
+                          child: Text(
+                            AppString.signUp,
                             style: TextStyle(
-                              color: colors.black,
-                              fontSize: 15.sp,
+                              color: colors.blue,
+                              fontSize: 14.sp,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              context.pushNamed(AppRoutesNamed.signup);
-                            },
-                            child: Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                color: colors.blue,
-                                fontSize: 14.sp,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              );
-            },
+              ),
+            ),
           ),
         ),
       ),

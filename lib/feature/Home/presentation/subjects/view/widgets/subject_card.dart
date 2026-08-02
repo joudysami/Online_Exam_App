@@ -45,13 +45,21 @@ class SubjectCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.r),
               ),
-              child: Image.network(
-                icon ,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.menu_book);
-                },
-              ),
+              child: icon.startsWith('http')
+                  ? Image.network(
+                      icon,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.menu_book);
+                      },
+                    )
+                  : Image.asset(
+                      icon,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.menu_book);
+                      },
+                    ),
             ),
             SizedBox(width: 18.w),
             Expanded(

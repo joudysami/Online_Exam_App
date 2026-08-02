@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:exam_app/config/network/auth_interceptors.dart';
-import 'package:exam_app/feature/Home/data/api/home_api_client.dart';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:injectable/injectable.dart';

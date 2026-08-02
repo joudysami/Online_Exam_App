@@ -1,7 +1,8 @@
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
-import 'package:exam_app/feature/Home/presentation/view/screens/explore_screen.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view/screens/explore_screen.dart';
 import 'package:exam_app/feature/Profile/presentation/view/screens/profile_screen.dart';
-import 'package:exam_app/feature/Home/presentation/view/screens/result_screen.dart';
+import 'package:exam_app/feature/Home/presentation/subjects/view/screens/result_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,17 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(
             icon: Icon(Icons.home_outlined, color: colors.grey),
             selectedIcon: Icon(Icons.home, color: colors.blue),
-            label: 'Explore',
+            label: AppString.explore,
           ),
           NavigationDestination(
             icon: Icon(Icons.assignment_outlined, color: colors.grey),
             selectedIcon: Icon(Icons.assignment, color: colors.blue),
-            label: 'Result',
+            label: AppString.result,
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline, color: colors.grey),
             selectedIcon: Icon(Icons.person, color: colors.blue),
-            label: 'Profile',
+            label: AppString.profile,
           ),
         ],
       ),
