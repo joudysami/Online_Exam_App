@@ -99,6 +99,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1000.LoginViewModel>(
       () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
     );
+    gh.factory<_i1000.LoginViewModel>(
+      () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
+    );
     gh.factory<_i997.ForgetPasswordViewModel>(
       () => _i997.ForgetPasswordViewModel(
         gh<_i486.ForgetPasswordUseCase>(),
@@ -113,3 +116,5 @@ extension GetItInjectableX on _i174.GetIt {
 class _$SharedPrefModule extends _i451.SharedPrefModule {}
 
 class _$DioModule extends _i948.DioModule {}
+
+
