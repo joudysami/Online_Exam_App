@@ -117,7 +117,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             ),
           ),
         ),
-      ),
     );
   }
 

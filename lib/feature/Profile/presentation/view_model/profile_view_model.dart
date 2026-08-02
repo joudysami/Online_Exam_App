@@ -8,6 +8,8 @@ import 'package:exam_app/feature/Profile/data/models/change_password_request.dar
 import 'package:equatable/equatable.dart';
 import 'package:exam_app/feature/Profile/domain/usecase/get_profile_data_usecase.dart';
 import 'package:exam_app/feature/Profile/presentation/view_model/profile_event.dart';
+import 'package:exam_app/config/base/base_state.dart';
+import 'package:exam_app/config/base/base_response.dart';
 
 class ProfileState extends Equatable {
   final BaseState<ProfileEntity> profileState;
@@ -67,22 +69,22 @@ class ProfileViewModel extends Cubit<ProfileState> {
 
     final response = await getProfileDataUseCase();
     switch (response) {
-      case SuccessResponse<ProfileEntity>():
+      case SuccessResponse<ProfileEntity> r:
         emit(
           state.copyWith(
             profileState: state.profileState.copyWith(
               isLoading: false,
-              data: response.data,
+              data: r.data,
               errorMessage: '',
             ),
           ),
         );
-      case ErrorResponse<ProfileEntity>():
+      case ErrorResponse<ProfileEntity> e:
         emit(
           state.copyWith(
             profileState: state.profileState.copyWith(
               isLoading: false,
-              errorMessage: response.errorMessage,
+              errorMessage: e.errorMessage,
             ),
           ),
         );
@@ -95,23 +97,23 @@ class ProfileViewModel extends Cubit<ProfileState> {
     final response = await editProfileUseCase(request);
     
     switch (response) {
-      case SuccessResponse<ProfileEntity>():
+      case SuccessResponse<ProfileEntity> r:
         emit(
           state.copyWith(
             profileState: state.profileState.copyWith(
               isLoading: false,
-              data: response.data,
+              data: r.data,
               errorMessage: '',
             ),
             isEditing: false,
           ),
         );
-      case ErrorResponse<ProfileEntity>():
+      case ErrorResponse<ProfileEntity> e:
         emit(
           state.copyWith(
             profileState: state.profileState.copyWith(
               isLoading: false,
-              errorMessage: response.errorMessage,
+              errorMessage: e.errorMessage,
             ),
           ),
         );
@@ -133,12 +135,12 @@ class ProfileViewModel extends Cubit<ProfileState> {
             ),
           ),
         );
-      case ErrorResponse<String>():
+      case ErrorResponse<String> e:
         emit(
           state.copyWith(
             profileState: state.profileState.copyWith(
               isLoading: false,
-              errorMessage: response.errorMessage,
+              errorMessage: e.errorMessage,
             ),
           ),
         );

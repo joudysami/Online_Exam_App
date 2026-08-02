@@ -42,7 +42,6 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final response = await remoteDatasource.getProfileData();
       final user = response.user!;
       return ProfileEntity(
-        id: user.id ?? '',
         username: user.username ?? '',
         firstName: user.firstName ?? '',
         lastName: user.lastName ?? '',

@@ -44,9 +44,12 @@ import '../../feature/Home/data/data_source/remote/home_remote_datasource_impl.d
     as _i82;
 import '../../feature/Home/data/repo/home_repo_impl.dart' as _i585;
 import '../../feature/Home/domain/repo/home_repo.dart' as _i440;
+import '../../feature/Home/domain/usecase/exams_usecase.dart' as _i597;
 import '../../feature/Home/domain/usecase/subject_usecase.dart' as _i773;
-import '../../feature/Home/presentation/view_model/home_view_model.dart'
-    as _i413;
+import '../../feature/Home/presentation/exams/view_model/exam_view_model.dart'
+    as _i696;
+import '../../feature/Home/presentation/subjects/view_model/subject_view_model.dart'
+    as _i45;
 import '../../feature/Profile/data/api/profile_api_client.dart' as _i848;
 import '../../feature/Profile/data/datasource/remote/profile_remote_datasource.dart'
     as _i363;
@@ -57,6 +60,8 @@ import '../../feature/Profile/domain/repo/profile_repository.dart' as _i880;
 import '../../feature/Profile/domain/usecase/change_password_usecase.dart'
     as _i886;
 import '../../feature/Profile/domain/usecase/edit_profile_usecase.dart' as _i26;
+import '../../feature/Profile/domain/usecase/get_profile_data_usecase.dart'
+    as _i976;
 import '../../feature/Profile/presentation/view_model/profile_view_model.dart'
     as _i699;
 import '../modules/dio_module.dart' as _i948;
@@ -141,6 +146,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i866.VerifyCodeUseCase>(
       () => _i866.VerifyCodeUseCase(gh<_i847.AuthRepository>()),
     );
+    gh.factory<_i597.GetExamsUseCase>(
+      () => _i597.GetExamsUseCase(gh<_i440.HomeRepo>()),
+    );
     gh.factory<_i773.SubjectUseCase>(
       () => _i773.SubjectUseCase(gh<_i440.HomeRepo>()),
     );
@@ -153,8 +161,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i26.EditProfileUseCase>(
       () => _i26.EditProfileUseCase(gh<_i880.ProfileRepository>()),
     );
-    gh.factory<_i413.HomeViewModel>(
-      () => _i413.HomeViewModel(gh<_i773.SubjectUseCase>()),
+    gh.factory<_i976.GetProfileDataUseCase>(
+      () => _i976.GetProfileDataUseCase(gh<_i880.ProfileRepository>()),
+    );
+    gh.factory<_i696.ExamsViewModel>(
+      () => _i696.ExamsViewModel(gh<_i597.GetExamsUseCase>()),
     );
     gh.factory<_i1000.LoginViewModel>(
       () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
@@ -166,8 +177,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i454.ResetPasswordUseCase>(),
       ),
     );
+    gh.factory<_i45.SubjectViewModel>(
+      () => _i45.SubjectViewModel(
+        gh<_i773.SubjectUseCase>(),
+        gh<_i597.GetExamsUseCase>(),
+      ),
+    );
     gh.factory<_i699.ProfileViewModel>(
       () => _i699.ProfileViewModel(
+        gh<_i976.GetProfileDataUseCase>(),
         gh<_i26.EditProfileUseCase>(),
         gh<_i886.ChangePasswordUseCase>(),
       ),
