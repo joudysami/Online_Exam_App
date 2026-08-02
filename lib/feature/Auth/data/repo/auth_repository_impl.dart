@@ -1,3 +1,4 @@
+import 'package:exam_app/config/errors/error_parser.dart';
 import 'package:injectable/injectable.dart';
 import 'package:exam_app/config/base/base_response.dart';
 import 'package:exam_app/feature/Auth/data/models/login_request.dart';
@@ -31,7 +32,7 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       return SuccessResponse<AuthEntity>(entity);
     } catch (e) {
-      return ErrorResponse<AuthEntity>(error: e);
+      return ErrorResponse<AuthEntity>(appError: errorParser(e as Exception));
     }
   }
 
@@ -49,7 +50,7 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       return SuccessResponse<AuthEntity>(entity);
     } catch (e) {
-      return ErrorResponse<AuthEntity>(error: e);
+      return ErrorResponse<AuthEntity>(appError: errorParser(e as Exception));
     }
   }
 
@@ -59,7 +60,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await remoteDatasource.forgotPassword(request);
       return SuccessResponse<String>(response.message ?? 'Reset code sent successfully');
     } catch (e) {
-      return ErrorResponse<String>(error: e);
+      return ErrorResponse<String>(appError: errorParser(e as Exception));
     }
   }
 
@@ -69,7 +70,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await remoteDatasource.verifyResetCode(request);
       return SuccessResponse<String>(response.message ?? 'Code verified successfully');
     } catch (e) {
-      return ErrorResponse<String>(error: e);
+      return ErrorResponse<String>(appError: errorParser(e as Exception));
     }
   }
 
@@ -79,7 +80,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await remoteDatasource.resetPassword(request);
       return SuccessResponse<String>(response.message ?? 'Password reset successfully');
     } catch (e) {
-      return ErrorResponse<String>(error: e);
+      return ErrorResponse<String>(appError: errorParser(e as Exception));
     }
   }
 }

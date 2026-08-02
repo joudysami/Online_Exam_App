@@ -1,0 +1,25 @@
+import 'package:dio/dio.dart';
+import 'package:exam_app/core/constant/app_string.dart';
+import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+@LazySingleton()
+class AuthInterceptors implements Interceptor{
+
+  final SharedPreferences sharedPreferences;
+  AuthInterceptors(this.sharedPreferences);
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    return handler.next(err);  }
+
+  @override
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async{
+    String?token=sharedPreferences.getString(AppString.tokenKey);
+      options.headers['Authorization'] = 'Bearer $token';  
+          return handler.next(options);
+  }
+
+  @override
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+    return handler.next(response);  }
+}
+//send token and request//
