@@ -3,7 +3,8 @@ import '../entity/profile_entity.dart';
 import '../../data/models/edit_profile_request.dart';
 import '../../data/models/change_password_request.dart';
 
-abstract class ProfileRepository {
+abstract interface class ProfileRepository {
   Future<BaseResponse<ProfileEntity>> editProfile(EditProfileRequest request);
   Future<BaseResponse<String>> changePassword(ChangePasswordRequest request);
+  Future<BaseResponse<ProfileEntity>> getProfileData();
 }

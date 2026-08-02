@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.obscureText, 
      this.icon,
+     this.readOnly = false,
   });
 
   final String? label;
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextEditingController? controller;
   final IconData? icon;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class CustomTextField extends StatelessWidget {
         validator: validator,
         controller: controller,
         obscureText: obscureText ?? false,
+        readOnly: readOnly,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           labelText: label,

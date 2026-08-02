@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'edit_profile_request.g.dart';
@@ -10,9 +9,6 @@ class EditProfileRequest {
   final String lastName;
   final String email;
   final String phone;
-  
-  @JsonKey(ignore: true)
-  final File? imageFile;
 
   EditProfileRequest({
     required this.username,
@@ -20,7 +16,6 @@ class EditProfileRequest {
     required this.lastName,
     required this.email,
     required this.phone,
-    this.imageFile,
   });
 
   factory EditProfileRequest.fromJson(Map<String, dynamic> json) => _$EditProfileRequestFromJson(json);

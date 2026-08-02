@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:exam_app/feature/Profile/data/models/edit_profile_request.dart';
 import 'package:exam_app/feature/Profile/data/models/change_password_request.dart';
 
@@ -9,10 +8,7 @@ class ToggleEditModeEvent extends ProfileEvent {
   ToggleEditModeEvent(this.isEditing);
 }
 
-class SelectProfileImageEvent extends ProfileEvent {
-  final File image;
-  SelectProfileImageEvent(this.image);
-}
+class GetProfileDataEvent extends ProfileEvent {}
 
 class UpdateProfileEvent extends ProfileEvent {
   final EditProfileRequest request;

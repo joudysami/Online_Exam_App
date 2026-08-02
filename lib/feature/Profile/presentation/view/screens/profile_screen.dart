@@ -10,8 +10,8 @@ import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/feature/Profile/presentation/view_model/profile_view_model.dart';
 import 'package:exam_app/feature/Profile/presentation/view_model/profile_event.dart';
 import 'package:exam_app/feature/Profile/data/models/edit_profile_request.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:exam_app/core/constant/app_strings.dart';
+import 'package:exam_app/core/utils/validators.dart';
 
 import '../../../../../config/routes/app_routes_named.dart';
 
@@ -43,115 +43,106 @@ class _ProfileViewState extends State<ProfileView> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    context.read<ProfileViewModel>().doEvent(GetProfileDataEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    return BlocConsumer<ProfileViewModel, ProfileState>(
+    return BlocListener<ProfileViewModel, ProfileState>(
       listener: (context, state) {
-        if (state.errorMessage.isNotEmpty) {
+        if (state.profileState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage, style: TextStyle(color: colors.white)), backgroundColor: colors.error),
+            SnackBar(content: Text(state.profileState.errorMessage, style: TextStyle(color: colors.white)), backgroundColor: colors.error),
           );
-        }
-      },
-      builder: (context, state) {
-        if (state.data != null && !state.isEditing) {
-           _usernameController.text = state.data!.username;
-           _firstNameController.text = state.data!.firstName;
-           _lastNameController.text = state.data!.lastName;
-           _emailController.text = state.data!.email;
-           _phoneController.text = state.data!.phone;
+        } else if (!state.profileState.isLoading && state.profileState.errorMessage.isEmpty && state.profileState.data != null && !state.isEditing) {
+          // You might want to show success message if updated
         }
 
-        return Scaffold(
-          backgroundColor: colors.white,
-          appBar: state.isEditing 
-              ? const CustomAppBar(title: 'Edit profile')
-              : AppBar(
-                  backgroundColor: colors.white,
-                  elevation: 0,
-                  automaticallyImplyLeading: false,
-                  title: Text(
-                    'Profile',
-                    style: TextStyle(
-                      color: colors.black,
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
+        if (state.profileState.data != null && !state.isEditing) {
+           _usernameController.text = state.profileState.data!.username;
+           _firstNameController.text = state.profileState.data!.firstName;
+           _lastNameController.text = state.profileState.data!.lastName;
+           _emailController.text = state.profileState.data!.email;
+           _phoneController.text = state.profileState.data!.phone;
+        }
+      },
+      child: BlocBuilder<ProfileViewModel, ProfileState>(
+        builder: (context, state) {
+
+          return Scaffold(
+            backgroundColor: colors.white,
+            appBar: state.isEditing 
+                ? const CustomAppBar(title: AppStrings.edit)
+                : AppBar(
+                    backgroundColor: colors.white,
+                    elevation: 0,
+                    automaticallyImplyLeading: false,
+                    title: Text(
+                      AppStrings.profile,
+                      style: TextStyle(
+                        color: colors.black,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-            child: Form(
+            body: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+              child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Center(
-                    child: GestureDetector(
-                      onTap: state.isEditing ? () async {
-                        final picker = ImagePicker();
-                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-                        if (image != null) {
-                          context.read<ProfileViewModel>().doEvent(SelectProfileImageEvent(File(image.path)));
-                        }
-                      } : null,
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 40.r,
-                            backgroundColor: colors.unselectedAnswer,
-                            backgroundImage: state.selectedImage != null ? FileImage(state.selectedImage!) : null,
-                            child: state.selectedImage == null ? Icon(Icons.person, size: 50.r, color: colors.grey) : null,
-                          ),
-                          if (state.isEditing)
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                padding: EdgeInsets.all(4.r),
-                                decoration: BoxDecoration(
-                                  color: colors.blue,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(Icons.camera_alt, color: colors.white, size: 16.r),
-                              ),
-                            ),
-                        ],
-                      ),
+                    child: CircleAvatar(
+                      radius: 40.r,
+                      backgroundColor: colors.unselectedAnswer,
+                      child: Icon(Icons.person, size: 50.r, color: colors.grey),
                     ),
                   ),
                   SizedBox(height: 25.h),
                   
                   CustomTextField(
-                    hint: 'User name',
-                    label: 'User name',
+                    hint: AppStrings.userName,
+                    label: AppStrings.userName,
                     controller: _usernameController,
+                    readOnly: !state.isEditing,
+                    validator: (val) => Validators.validateRequired(val, AppStrings.userName),
                   ),
                   
                   Row(
                     children: [
                       Expanded(
                         child: CustomTextField(
-                          hint: 'First name',
-                          label: 'First name',
+                          hint: AppStrings.firstName,
+                          label: AppStrings.firstName,
                           controller: _firstNameController,
+                          readOnly: !state.isEditing,
+                          validator: (val) => Validators.validateRequired(val, AppStrings.firstName),
                         ),
                       ),
                       Expanded(
                         child: CustomTextField(
-                          hint: 'Last name',
-                          label: 'Last name',
+                          hint: AppStrings.lastName,
+                          label: AppStrings.lastName,
                           controller: _lastNameController,
+                          readOnly: !state.isEditing,
+                          validator: (val) => Validators.validateRequired(val, AppStrings.lastName),
                         ),
                       ),
                     ],
                   ),
 
                   CustomTextField(
-                    hint: 'Email',
-                    label: 'Email',
+                    hint: AppStrings.email,
+                    label: AppStrings.email,
                     controller: _emailController,
+                    readOnly: !state.isEditing,
+                    validator: Validators.validateEmail,
                   ),
 
                   Padding(
@@ -164,7 +155,7 @@ class _ProfileViewState extends State<ProfileView> {
                           readOnly: true,
                           obscureText: true,
                           decoration: InputDecoration(
-                            labelText: 'Password',
+                            labelText: AppStrings.newPassword,
                           ),
                         ),
                         Positioned(
@@ -174,7 +165,7 @@ class _ProfileViewState extends State<ProfileView> {
                               context.pushNamed(AppRoutesNamed.changePassword);
                             },
                             child: Text(
-                              'Change',
+                              AppStrings.edit,
                               style: TextStyle(
                                 color: colors.blue,
                                 fontWeight: FontWeight.bold,
@@ -188,18 +179,20 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
 
                   CustomTextField(
-                    hint: 'Phone number',
-                    label: 'Phone number',
+                    hint: AppStrings.phoneNumber,
+                    label: AppStrings.phoneNumber,
                     controller: _phoneController,
+                    readOnly: !state.isEditing,
+                    validator: (val) => Validators.validateRequired(val, AppStrings.phoneNumber),
                   ),
 
                   SizedBox(height: 30.h),
                   
-                  if (state.isLoading)
+                  if (state.profileState.isLoading)
                     Center(child: CircularProgressIndicator(color: colors.blue))
                   else
                     CustomButton(
-                      text: 'Update',
+                      text: state.isEditing ? AppStrings.save : AppStrings.edit,
                       onTap: state.isEditing ? () {
                         if (_formKey.currentState!.validate()) {
                           context.read<ProfileViewModel>().doEvent(
@@ -210,7 +203,6 @@ class _ProfileViewState extends State<ProfileView> {
                                 lastName: _lastNameController.text,
                                 email: _emailController.text,
                                 phone: _phoneController.text,
-                                imageFile: state.selectedImage,
                               )
                             )
                           );
@@ -222,9 +214,9 @@ class _ProfileViewState extends State<ProfileView> {
                 ],
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

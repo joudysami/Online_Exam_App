@@ -35,4 +35,20 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return response.message ?? 'Password changed successfully';
     });
   }
+
+  @override
+  Future<BaseResponse<ProfileEntity>> getProfileData() async {
+    return safeCall.safeApiCall(() async {
+      final response = await remoteDatasource.getProfileData();
+      final user = response.user!;
+      return ProfileEntity(
+        id: user.id ?? '',
+        username: user.username ?? '',
+        firstName: user.firstName ?? '',
+        lastName: user.lastName ?? '',
+        email: user.email ?? '',
+        phone: user.phone ?? '',
+      );
+    });
+  }
 }

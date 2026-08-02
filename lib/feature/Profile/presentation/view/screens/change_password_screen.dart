@@ -10,6 +10,8 @@ import 'package:exam_app/feature/Profile/presentation/view_model/profile_view_mo
 import 'package:exam_app/feature/Profile/presentation/view_model/profile_event.dart';
 import 'package:exam_app/feature/Profile/data/models/change_password_request.dart';
 import 'package:go_router/go_router.dart';
+import 'package:exam_app/core/constant/app_strings.dart';
+import 'package:exam_app/core/utils/validators.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({super.key});
@@ -42,87 +44,88 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
     return Scaffold(
       backgroundColor: colors.white,
-      appBar: const CustomAppBar(title: 'Reset password'),
-      body: BlocConsumer<ProfileViewModel, ProfileState>(
+      appBar: const CustomAppBar(title: AppStrings.resetPassword),
+      body: BlocListener<ProfileViewModel, ProfileState>(
         listener: (context, state) {
-          if (state.errorMessage.isNotEmpty) {
+          if (state.profileState.errorMessage.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage), backgroundColor: colors.error),
+              SnackBar(content: Text(state.profileState.errorMessage), backgroundColor: colors.error),
             );
-          } else if (!state.isLoading && state.errorMessage.isEmpty && state.data == null) {
+          } else if (!state.profileState.isLoading && state.profileState.errorMessage.isEmpty && state.profileState.data == null) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Password reset successfully'), backgroundColor: colors.success),
+              SnackBar(content: Text(AppStrings.updateProfileSuccess), backgroundColor: colors.success),
             );
             context.pop();
           }
         },
-        builder: (context, state) {
-          return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-            child: Form(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+          child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomTextField(
-                    hint: 'Current password',
-                    label: 'Current password',
+                    hint: AppStrings.currentPassword,
+                    label: AppStrings.currentPassword,
                     controller: _currentPasswordController,
                     obscureText: true,
-                    validator: (val) {
-                      if (val == null || val.isEmpty) return 'Please enter current password';
-                      return null;
-                    },
+                    validator: (val) => Validators.validateRequired(val, AppStrings.currentPassword),
                   ),
                   SizedBox(height: 10.h),
                   CustomTextField(
-                    hint: 'New password',
-                    label: 'New password',
+                    hint: AppStrings.newPassword,
+                    label: AppStrings.newPassword,
                     controller: _newPasswordController,
                     obscureText: true,
-                    validator: (val) {
-                      if (val == null || val.isEmpty) return 'Please enter new password';
-                      if (val.length < 6) return 'Password must be at least 6 characters';
-                      return null;
-                    },
+                    validator: (val) => Validators.validatePassword(val),
                   ),
                   SizedBox(height: 10.h),
                   CustomTextField(
-                    hint: 'Confirm password',
-                    label: 'Confirm password',
+                    hint: AppStrings.confirmPassword,
+                    label: AppStrings.confirmPassword,
                     controller: _confirmPasswordController,
                     obscureText: true,
-                    validator: (val) {
-                      if (val != _newPasswordController.text) return 'Password not matched';
-                      return null;
-                    },
+                    validator: (val) => Validators.validateConfirmPassword(val, _newPasswordController.text),
                   ),
                   SizedBox(height: 30.h),
-                  if (state.isLoading)
-                    Center(child: CircularProgressIndicator(color: colors.blue))
-                  else
-                    CustomButton(
-                      text: 'Update',
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<ProfileViewModel>().doEvent(
-                            ChangePasswordEvent(
-                              ChangePasswordRequest(
-                                oldPassword: _currentPasswordController.text,
-                                password: _newPasswordController.text,
-                                rePassword: _confirmPasswordController.text,
+                  BlocBuilder<ProfileViewModel, ProfileState>(
+                    builder: (context, state) {
+                      if (state.profileState.isLoading) {
+                        return Center(child: CircularProgressIndicator(color: colors.blue));
+                      }
+                      return CustomButton(
+                        text: AppStrings.save,
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<ProfileViewModel>().doEvent(
+                              ChangePasswordEvent(
+                                ChangePasswordRequest(
+                                  oldPassword: _currentPasswordController.text,
+                                  password: _newPasswordController.text,
+                                  rePassword: _confirmPasswordController.text,
+                                )
                               )
-                            )
-                          );
-                        }
-                      },
-                    ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 }

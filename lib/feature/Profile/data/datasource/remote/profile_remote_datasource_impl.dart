@@ -13,18 +13,16 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<AuthResponse> editProfile(EditProfileRequest request) {
-    return profileApiClient.editProfile(
-      username: request.username,
-      firstName: request.firstName,
-      lastName: request.lastName,
-      email: request.email,
-      phone: request.phone,
-      photo: request.imageFile,
-    );
+    return profileApiClient.editProfile(request);
   }
 
   @override
   Future<AuthResponse> changePassword(ChangePasswordRequest request) {
     return profileApiClient.changePassword(request);
+  }
+
+  @override
+  Future<AuthResponse> getProfileData() {
+    return profileApiClient.getProfileData();
   }
 }
