@@ -1,16 +1,16 @@
-import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/base/base_state.dart';
+import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
+import 'package:exam_app/feature/Home/data/models/exam_details_args.dart';
 import 'package:exam_app/feature/Home/domain/entity/subject_entity.dart';
-import 'package:exam_app/feature/Home/presentation/exams/view/screens/exams_screen.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view/widgets/search_text_field.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view/widgets/subject_card.dart';
-import 'package:exam_app/feature/Home/presentation/subjects/view_model/subject_event.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view_model/subject_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -18,14 +18,8 @@ class ExploreScreen extends StatefulWidget {
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
-class _ExploreScreenState extends State<ExploreScreen> {
-  late final SubjectViewModel subjectViewModel = getIt<SubjectViewModel>();
-  @override
-  void initState() {
-    super.initState();
-    subjectViewModel.doEvent(GetAllSubject());
-  }
 
+class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -45,7 +39,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           ),
           SizedBox(height: 20.h),
-          SearchTextField(hintText: AppString.search),
+          SearchTextField(
+            hintText: AppString.search,
+            onChanged: (value) {
+              context.read<SubjectViewModel>().searchSubjects(value);
+            },
+          ),
           SizedBox(height: 28.h),
           Text(
             AppString.browseBySubject,
@@ -58,7 +57,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
           ),
           SizedBox(height: 16.h),
           BlocBuilder<SubjectViewModel, BaseState<List<SubjectEntity>>>(
-            bloc: subjectViewModel,
             builder: (context, state) {
               if (state.isLoading) {
                 return const Center(child: CircularProgressIndicator());
@@ -79,13 +77,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       title: subject.name,
                       icon: subject.icon,
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ExamsScreen(
-                              subjectId: subject.id,
-                              subjectName: subject.name,
-                              subjectIcon: subject.icon,
-                            ),
+                        context.pushNamed(
+                          AppRoutesNamed.examDetails,
+                          extra: ExamDetailsArgs(
+                            subjectId: subject.id,
+                            subjectName: subject.name,
+                            subjectIcon: subject.icon,
                           ),
                         );
                       },
@@ -97,7 +94,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 return Center(child: Text(state.errorMessage));
               }
 
-              return const SizedBox.shrink();
+              return const Center(child: Text('No subjects found'));
             },
           ),
           SizedBox(height: 24.h),

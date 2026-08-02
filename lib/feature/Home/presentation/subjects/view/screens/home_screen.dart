@@ -15,15 +15,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _tabs = const [ExploreScreen(), 
-  ResultScreen(),
-   ProfileTab()];
+  final List<Widget> _tabs = const [
+    ExploreScreen(),
+    ResultScreen(),
+    ProfileTab(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     return Scaffold(
-      backgroundColor: colors.white,
       body: IndexedStack(index: _currentIndex, children: _tabs),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
           });
         },
-        backgroundColor: colors.white,
+
         indicatorColor: colors.blue.withValues(alpha: 0.12),
         elevation: 8,
         destinations: [

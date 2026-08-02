@@ -4,9 +4,9 @@ import 'package:exam_app/feature/Home/domain/repo/home_repo.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class SubjectUseCase {
+class GetSubjectsUseCase {
   final HomeRepo homeRepo;
-  SubjectUseCase(this.homeRepo);
+  GetSubjectsUseCase(this.homeRepo);
   
   Future<BaseResponse<List<SubjectEntity>>> call() {
     return homeRepo.getAllSubjects();

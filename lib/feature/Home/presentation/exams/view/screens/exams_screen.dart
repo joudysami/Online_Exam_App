@@ -1,9 +1,7 @@
-import 'package:exam_app/config/Di/di.dart';
 import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/feature/Home/domain/entity/exam_entity.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view/widgets/exam_card.dart';
-import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_event.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,21 +24,10 @@ class ExamsScreen extends StatefulWidget {
 }
 
 class _ExamsScreenState extends State<ExamsScreen> {
-  late final ExamsViewModel viewModel = getIt<ExamsViewModel>();
-  @override
-  void initState() {
-    super.initState();
-    viewModel.doEvent(
-      GetAllExams(
-        widget.subjectId,
-        widget.subjectName));
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     return Scaffold(
-      backgroundColor: colors.white,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,9 +43,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                       color: colors.black,
                     ),
                     onPressed: () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      } else {
+                      if (context.canPop()) {
                         context.pop();
                       }
                     },
@@ -76,7 +61,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
               ),
             ),
             BlocBuilder<ExamsViewModel, BaseState<List<ExamEntity>>>(
-              bloc: viewModel,
               builder: (context, state) {
                 if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -105,7 +89,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     },
                   );
                 }
-                return const SizedBox.shrink();
+                return const Center(child: Text('No exams found'));
               },
             ),
           ],

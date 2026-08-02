@@ -1,6 +1,7 @@
 import 'package:exam_app/config/base/base_response.dart';
 import 'package:exam_app/config/errors/error_parser.dart';
-
+import 'package:injectable/injectable.dart';
+@injectable
 class SafeCall {
   Future<BaseResponse<T>> safeApiCall<T>(
     Future<T> Function() apiCall) async {

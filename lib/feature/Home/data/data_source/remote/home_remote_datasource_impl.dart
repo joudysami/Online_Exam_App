@@ -3,18 +3,19 @@ import 'package:exam_app/feature/Home/data/data_source/remote/home_remote_dataso
 import 'package:exam_app/feature/Home/data/models/exams_response.dart';
 import 'package:exam_app/feature/Home/data/models/subjects_response.dart';
 import 'package:injectable/injectable.dart';
+
 @Injectable(as: HomeRemoteDatasource)
 class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
-   final HomeApiClient homeApiClient;
-   HomeRemoteDatasourceImpl(this.homeApiClient);
+  final HomeApiClient homeApiClient;
+  HomeRemoteDatasourceImpl(this.homeApiClient);
   @override
   Future<ExamsResponse> getAllExams(String subjectId) async {
-    return await homeApiClient.getAllExams(subjectId);
+    return await homeApiClient.getAllExams();
   }
 
   @override
   Future<SubjectsResponse> geAllSubjects() async {
-      final String tokenKey = 'USER_TOKEN';
-    return await homeApiClient.geAllSubjects("Bearer $tokenKey");
+    final String tokenKey = 'USER_TOKEN';
+    return await homeApiClient.geAllSubjects();
   }
 }
