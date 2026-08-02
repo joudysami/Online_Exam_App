@@ -10,7 +10,7 @@ part 'home_api_client.g.dart';
 abstract class HomeApiClient {
   factory HomeApiClient(Dio dio, {String baseUrl}) = _HomeApiClient;
   @GET(ApiEndpoints.subject)
-  Future<SubjectsResponse> geAllSubjects();
+  Future<SubjectsResponse> getAllSubjects();
 
   @GET(ApiEndpoints.exam)
   Future<ExamsResponse> getAllExams();

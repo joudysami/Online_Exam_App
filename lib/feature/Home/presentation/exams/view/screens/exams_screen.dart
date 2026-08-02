@@ -1,4 +1,5 @@
 import 'package:exam_app/config/base/base_state.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/feature/Home/domain/entity/exam_entity.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view/widgets/exam_card.dart';
@@ -89,7 +90,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     },
                   );
                 }
-                return const Center(child: Text('No exams found'));
+                return const Center(child: Text(AppString.noExamsFound));
               },
             ),
           ],

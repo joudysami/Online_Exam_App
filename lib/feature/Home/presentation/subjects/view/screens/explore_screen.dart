@@ -94,7 +94,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 return Center(child: Text(state.errorMessage));
               }
 
-              return const Center(child: Text('No subjects found'));
+              return const Center(child: Text(AppString.noExamsFound));
             },
           ),
           SizedBox(height: 24.h),

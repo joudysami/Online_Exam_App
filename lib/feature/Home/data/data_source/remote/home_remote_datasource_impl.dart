@@ -14,8 +14,7 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
   }
 
   @override
-  Future<SubjectsResponse> geAllSubjects() async {
-    final String tokenKey = 'USER_TOKEN';
-    return await homeApiClient.geAllSubjects();
+  Future<SubjectsResponse> getAllSubjects() async {
+    return await homeApiClient.getAllSubjects();
   }
 }

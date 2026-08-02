@@ -80,6 +80,8 @@ class AppString {
   static const String browseBySubject = 'Browse by subject';
   static const String question = 'Question';
   static String questionsCount(dynamic count) => '$count Question';
+    static const String tokenKey = 'token';
+    static const String noExamsFound = 'No exams found';
 }
 
 
