@@ -50,6 +50,7 @@ dependencies:
   go_router: ^17.3.0
   pin_code_fields: ^9.4.0
   pretty_dio_logger: ^1.4.0
+  equatable: ^2.1.0
 
 dev_dependencies:
   flutter_test:

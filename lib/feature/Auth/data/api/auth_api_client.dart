@@ -11,9 +11,11 @@ import '../models/reset_password_request.dart';
 import '../models/sign_up_request.dart';
 
 part 'auth_api_client.g.dart';
+@LazySingleton()
 
 @RestApi(baseUrl:ApiEndpoints.baseUrl )
 abstract class AuthApiClient {
+  @factoryMethod
   factory AuthApiClient(Dio dio, {String baseUrl}) = _AuthApiClient;
 
   @POST(ApiEndpoints.sinIn)

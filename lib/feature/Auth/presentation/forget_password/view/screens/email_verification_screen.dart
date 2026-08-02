@@ -40,12 +40,10 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   void onResendPressed(BuildContext context) {
-  context.read<ForgetPasswordViewModel>().doEvent(
-    ClearVerifyCodeError(),
-  );
-  pinController.clear();
-  pinController.clearError();
-}
+    context.read<ForgetPasswordViewModel>().doEvent(ClearVerifyCodeError());
+    pinController.clear();
+    pinController.clearError();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +77,9 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
               SizedBox(height: 32.h),
               BlocBuilder<ForgetPasswordViewModel, ForgetPasswordState>(
+                buildWhen: (previous, current) {
+                  return previous.verifyCodeState != current.verifyCodeState;
+                },
                 builder: (context, state) {
                   return state.verifyCodeState.isLoading
                       ? Padding(
@@ -89,14 +90,14 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
                           pinController: pinController,
                           hasError:
                               state.verifyCodeState.errorMessage.isNotEmpty,
-                       onChanged: (value) {
-  if (state.verifyCodeState.errorMessage.isNotEmpty) {
-    context.read<ForgetPasswordViewModel>().doEvent(
-      ClearVerifyCodeError(),
-    );
-    pinController.clearError();
-  }
-},
+                          onChanged: (value) {
+                            if (state.verifyCodeState.errorMessage.isNotEmpty) {
+                              context.read<ForgetPasswordViewModel>().doEvent(
+                                ClearVerifyCodeError(),
+                              );
+                              pinController.clearError();
+                            }
+                          },
                           onCompleted: (code) {
                             viewModel.doEvent(EmailVerification(code));
                           },
@@ -104,6 +105,9 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 },
               ),
               BlocBuilder<ForgetPasswordViewModel, ForgetPasswordState>(
+                buildWhen: (previous, current) {
+                  return previous.verifyCodeState != current.verifyCodeState;
+                },
                 builder: (context, state) {
                   if (state.verifyCodeState.errorMessage.isEmpty) {
                     return const SizedBox.shrink();
