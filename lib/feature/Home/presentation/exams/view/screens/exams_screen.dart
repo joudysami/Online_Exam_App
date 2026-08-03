@@ -1,5 +1,7 @@
 import 'package:exam_app/config/base/base_state.dart';
+import 'package:exam_app/config/routes/app_routes_named.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
+import 'package:exam_app/feature/Home/data/models/exam_details_args.dart';
 import 'package:exam_app/feature/Home/domain/entity/exam_entity.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view/widgets/exam_card.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_view_model.dart';
@@ -60,37 +62,49 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 ],
               ),
             ),
-            BlocBuilder<ExamsViewModel, BaseState<List<ExamEntity>>>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state.errorMessage.isNotEmpty) {
-                  return Center(child: Text(state.errorMessage));
-                }
-                if (state.data != null) {
-                  final exams = state.data!;
-                  return ListView.separated(
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(height: 10.h);
-                    },
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: exams.length,
-                    itemBuilder: (context, index) {
-                      final exam = exams[index];
-                      return ExamCard(
-                        title: exam.title,
-                        duration: exam.duration.toString(),
-                        numberOfQuestions: exam.numberOfQuestions.toString(),
-                        subjectIcon: widget.subjectIcon,
-                        onTap: () {},
-                      );
-                    },
-                  );
-                }
-                return const Center(child: Text('No exams found'));
-              },
+            Expanded(
+              child: BlocBuilder<ExamsViewModel, BaseState<List<ExamEntity>>>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (state.errorMessage.isNotEmpty) {
+                    return Center(child: Text(state.errorMessage));
+                  }
+                  if (state.data != null) {
+                    final exams = state.data!;
+                    return ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 10.h);
+                      },
+                      itemCount: exams.length,
+                      itemBuilder: (context, index) {
+                        final exam = exams[index];
+                        return ExamCard(
+                          title: exam.title,
+                          duration: exam.duration.toString(),
+                          numberOfQuestions: exam.numberOfQuestions.toString(),
+                          subjectIcon: widget.subjectIcon,
+              
+                          onTap: () {
+                            context.pushNamed(
+                              AppRoutesNamed.startExam,
+                              extra: ExamDetailsArgs(
+                                subjectId: widget.subjectId,
+                                subjectName: widget.subjectName,
+                                subjectIcon: widget.subjectIcon,
+                          duration: exam.duration.toString(),
+                          numberOfQuestions: exam.numberOfQuestions.toString(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
+                  return const Center(child: Text('No exams found'));
+                },
+              ),
             ),
           ],
         ),

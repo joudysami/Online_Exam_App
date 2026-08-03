@@ -10,6 +10,7 @@ import 'package:exam_app/feature/Auth/presentation/sign_up/view/sign_up_screen.d
 import 'package:exam_app/feature/Auth/presentation/sign_up/view_model/sign_up_view_model.dart';
 import 'package:exam_app/feature/Home/data/models/exam_details_args.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view/screens/exams_screen.dart';
+import 'package:exam_app/feature/Home/presentation/exams/view/screens/start_exams_screen.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_event.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_view_model.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view/screens/home_screen.dart';
@@ -111,6 +112,25 @@ class AppRoutes {
               subjectId: args.subjectId,
               subjectName: args.subjectName,
               subjectIcon: args.subjectIcon,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutesNamed.startExam,
+        name: AppRoutesNamed.startExam,
+        builder: (context, state) {
+          final args = state.extra as ExamDetailsArgs;
+          return BlocProvider(
+            create: (_) =>
+                getIt<ExamsViewModel>()
+                  ..doEvent(GetAllExams(args.subjectId, args.subjectName)),
+            child: StartExamScreen(
+              subjectId: args.subjectId,
+              subjectName: args.subjectName,
+              subjectIcon: args.subjectIcon,
+              duration: args.duration??"",
+              numberOfQuestions: args.numberOfQuestions??"",
             ),
           );
         },
