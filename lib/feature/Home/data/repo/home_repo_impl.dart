@@ -14,7 +14,7 @@ class HomeRepoImpl implements HomeRepo {
   @override
   Future<BaseResponse<List<SubjectEntity>>> getAllSubjects() {
     return safeCall.safeApiCall(() async {
-      final response = await homeRemoteDatasource.geAllSubjects();
+      final response = await homeRemoteDatasource.getAllSubjects();
       return response.subjects?.map((subject) => subject.toDomain()).toList() ??
           [];
     });

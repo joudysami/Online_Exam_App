@@ -84,6 +84,8 @@ class AppString {
   static const String instructions = 'Instructions';
   static const String duration = 'Duration';
   static const String highLevel = 'High-level ';
+    static const String tokenKey = 'token';
+    static const String noExamsFound = 'No exams found';
 }
 
 
