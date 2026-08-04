@@ -12,6 +12,7 @@ class SafeCall {
      final appError = errorParser(e as Exception);
 
       return ErrorResponse(
+
         appError: appError,
       );
     }

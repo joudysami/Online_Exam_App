@@ -1,13 +1,14 @@
 import 'package:exam_app/config/helpers/validator/app_validators.dart';
 import 'package:exam_app/config/routes/app_routes_named.dart';
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_app_bar.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/core/widgets/custom_textfeild.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view/widgets/header_section.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_event.dart';
+import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_state.dart';
 import 'package:exam_app/feature/Auth/presentation/forget_password/view_model/forget_password_view_model.dart';
-import 'package:exam_app/feature/Auth/presentation/forget_password/state/forget_password_state.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,11 +24,13 @@ class ForgetPasswordScreen extends StatefulWidget {
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   late final TextEditingController emailController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final ForgetPasswordViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
     emailController = TextEditingController();
+  viewModel = context.read<ForgetPasswordViewModel>();
   }
 
   @override
@@ -39,62 +42,65 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return BlocConsumer<ForgetPasswordViewModel, ForgetPasswordState>(
+    return BlocListener<ForgetPasswordViewModel, ForgetPasswordState>(
       listener: (context, state) {
-        if (state is ForgetPasswordSuccess) {
+        if (state.forgetPasswordState.data != null) {
           context.pushNamed(AppRoutesNamed.emailVerification);
-        } else if (state is ForgetPasswordError) {
+        } else if (state.forgetPasswordState.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            SnackBar(content: Text(state.forgetPasswordState.errorMessage), backgroundColor: Colors.red),
           );
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: colors.white,
-          appBar: CustomAppBar(title: 'Password'),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.h),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 40.h),
-                  HeaderSection(
-                    title: 'Forget password',
-                    subtitle: 'Please enter your email associated to\nyour account',
+      child: Scaffold(
+        backgroundColor: colors.white,
+        appBar: CustomAppBar(title: AppString.password),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 40.h),
+                HeaderSection(
+                  title: AppString.forgetPasswordTitle,
+                  subtitle: AppString.forgetPasswordSubtitle,
+                ),
+                SizedBox(height: 32.h),
+                CustomTextField(
+                  label: AppString.email,
+                  hint: AppString.enterYourEmail,
+                  validator: AppValidators.emailValidator,
+                  controller: emailController,
+                ),
+                SizedBox(height: 48.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: BlocBuilder<ForgetPasswordViewModel, ForgetPasswordState>(
+               
+                    builder: (context, state) {
+                      return state.forgetPasswordState.isLoading
+                          ? Center(child: CircularProgressIndicator(color: colors.blue))
+                          : CustomButton(
+                              text: AppString.continueText,
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  viewModel.doEvent(ForgetPassword(
+                                    emailController.text.trim(),
+                                  ));
+                                }
+                              },
+                            );
+                    },
                   ),
-                  SizedBox(height: 32.h),
-                  CustomTextField(
-                    label: 'Email',
-                    hint: 'Enter your email',
-                    validator: AppValidators.emailValidator,
-                    controller: emailController,
-                  ),
-                  SizedBox(height: 48.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: state is ForgetPasswordLoading
-                        ? Center(child: CircularProgressIndicator(color: colors.blue))
-                        : CustomButton(
-                            text: 'Continue',
-                            onTap: () {
-                              if (_formKey.currentState!.validate()) {
-                                context.read<ForgetPasswordViewModel>().forgotPassword(
-                                  emailController.text.trim(),
-                                );
-                              }
-                            },
-                          ),
-                  ),
-                  SizedBox(height: 32.h),
-                ],
-              ),
+                ),
+                SizedBox(height: 32.h),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

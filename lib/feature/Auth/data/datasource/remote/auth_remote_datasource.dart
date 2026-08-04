@@ -5,7 +5,7 @@ import 'package:exam_app/feature/Auth/data/models/verify_reset_code_request.dart
 import 'package:exam_app/feature/Auth/data/models/reset_password_request.dart';
 import 'package:exam_app/feature/Auth/data/models/sign_up_request.dart';
 
-abstract class AuthRemoteDatasource {
+abstract interface class AuthRemoteDatasource {
   Future<AuthResponse> signIn(LoginRequest request);
   Future<AuthResponse> signUp(SignUpRequest request);
   Future<AuthResponse> forgotPassword(ForgetPasswordRequest request);
