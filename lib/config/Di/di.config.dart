@@ -65,12 +65,13 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final sharedPrefModule = _$SharedPrefModule();
     final dioModule = _$DioModule();
+    final apiModule = _$ApiModule();
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => sharedPrefModule.prefs,
       preResolve: true,
     );
     gh.factory<_i185.SafeCall>(() => _i185.SafeCall());
-    gh.lazySingleton<_i466.AuthInterceptors>(
+    gh.factory<_i466.AuthInterceptors>(
       () => _i466.AuthInterceptors(gh<_i460.SharedPreferences>()),
     );
     gh.factory<_i505.AuthLocalDatasource>(
@@ -79,28 +80,28 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i361.Dio>(
       () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
     );
-    gh.lazySingleton<_i39.AuthApiClient>(
-      () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
-    );
     gh.lazySingleton<_i602.HomeApiClient>(
       () => apiModule.provideHomeApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i546.HomeRemoteDatasource>(
       () => _i82.HomeRemoteDatasourceImpl(gh<_i602.HomeApiClient>()),
     );
+    gh.lazySingleton<_i39.AuthApiClient>(
+      () => _i39.AuthApiClient(gh<_i361.Dio>(), baseUrl: gh<String>()),
+    );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),
-    );
-    gh.factory<_i440.HomeRepo>(
-      () => _i585.HomeRepoImpl(
-        gh<_i546.HomeRemoteDatasource>(),
-        gh<_i185.SafeCall>(),
-      ),
     );
     gh.factory<_i847.AuthRepository>(
       () => _i716.AuthRepositoryImpl(
         gh<_i345.AuthRemoteDatasource>(),
         gh<_i505.AuthLocalDatasource>(),
+        gh<_i185.SafeCall>(),
+      ),
+    );
+    gh.factory<_i440.HomeRepo>(
+      () => _i585.HomeRepoImpl(
+        gh<_i546.HomeRemoteDatasource>(),
         gh<_i185.SafeCall>(),
       ),
     );
@@ -131,12 +132,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1000.LoginViewModel>(
       () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
     );
-    gh.factory<_i1000.LoginViewModel>(
-      () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
-    );
-    gh.factory<_i1000.LoginViewModel>(
-      () => _i1000.LoginViewModel(gh<_i41.LoginUseCase>()),
-    );
     gh.factory<_i696.ExamsViewModel>(
       () => _i696.ExamsViewModel(gh<_i363.GetExamsUseCase>()),
     );
@@ -158,4 +153,4 @@ class _$SharedPrefModule extends _i451.SharedPrefModule {}
 
 class _$DioModule extends _i948.DioModule {}
 
-
+class _$ApiModule extends _i804.ApiModule {}

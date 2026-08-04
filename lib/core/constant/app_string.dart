@@ -80,6 +80,10 @@ class AppString {
   static const String browseBySubject = 'Browse by subject';
   static const String question = 'Question';
   static String questionsCount(dynamic count) => '$count Question';
+  static const String startExam = 'Start Exam';
+  static const String instructions = 'Instructions';
+  static const String duration = 'Duration';
+  static const String highLevel = 'High-level ';
     static const String tokenKey = 'token';
     static const String noExamsFound = 'No exams found';
 }
