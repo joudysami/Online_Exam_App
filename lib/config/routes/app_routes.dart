@@ -16,6 +16,10 @@ import 'package:exam_app/feature/Home/presentation/exams/view_model/exam_view_mo
 import 'package:exam_app/feature/Home/presentation/subjects/view/screens/home_screen.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view_model/subject_event.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view_model/subject_view_model.dart';
+import 'package:exam_app/feature/Home/presentation/questions/view/screens/questions_screen.dart';
+import 'package:exam_app/feature/Home/presentation/questions/view/screens/score_screen.dart';
+import 'package:exam_app/feature/Home/presentation/questions/view_model/questions_view_model.dart';
+import 'package:exam_app/feature/Home/domain/entity/score_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -82,6 +86,25 @@ class AppRoutes {
             name: AppRoutesNamed.resetPassword,
             builder: (context, state) => const ResetPasswordScreen(),
           ),
+          GoRoute(
+            path: AppRoutesNamed.questionsScreen,
+            name: AppRoutesNamed.questionsScreen,
+            builder: (context, state) {
+              final args = state.extra as ExamDetailsArgs;
+              return BlocProvider(
+                create: (_) => getIt<QuestionsViewModel>(),
+                child: QuestionsScreen(examId: args.examId ?? '', duration: args.duration ?? '30'),
+              );
+            },
+          ),
+          GoRoute(
+            path: AppRoutesNamed.scoreScreen,
+            name: AppRoutesNamed.scoreScreen,
+            builder: (context, state) {
+              final score = state.extra as ScoreEntity;
+              return ScoreScreen(score: score);
+            },
+          ),
         ],
       ),
       GoRoute(
@@ -126,6 +149,7 @@ class AppRoutes {
                 getIt<ExamsViewModel>()
                   ..doEvent(GetAllExams(args.subjectId, args.subjectName)),
             child: StartExamScreen(
+              examId: args.examId ?? '',
               subjectId: args.subjectId,
               subjectName: args.subjectName,
               subjectIcon: args.subjectIcon,
