@@ -50,6 +50,20 @@ import '../../feature/Home/presentation/exams/view_model/exam_view_model.dart'
     as _i696;
 import '../../feature/Home/presentation/subjects/view_model/subject_view_model.dart'
     as _i45;
+import '../../feature/Profile/data/api/profile_api_client.dart' as _i848;
+import '../../feature/Profile/data/datasource/remote/profile_remote_datasource.dart'
+    as _i363;
+import '../../feature/Profile/data/datasource/remote/profile_remote_datasource_impl.dart'
+    as _i18;
+import '../../feature/Profile/data/repo/profile_repository_impl.dart' as _i819;
+import '../../feature/Profile/domain/repo/profile_repository.dart' as _i880;
+import '../../feature/Profile/domain/usecase/change_password_usecase.dart'
+    as _i886;
+import '../../feature/Profile/domain/usecase/edit_profile_usecase.dart' as _i26;
+import '../../feature/Profile/domain/usecase/get_profile_data_usecase.dart'
+    as _i976;
+import '../../feature/Profile/presentation/view_model/profile_view_model.dart'
+    as _i699;
 import '../modules/dio_module.dart' as _i948;
 import '../network/auth_interceptors.dart' as _i466;
 import '../network/safe_call.dart' as _i185;
@@ -86,8 +100,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i39.AuthApiClient>(
       () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i848.ProfileApiClient>(
+      () => apiModule.provideProfileApiClient(gh<_i361.Dio>()),
+    );
     gh.factory<_i546.HomeRemoteDatasource>(
       () => _i82.HomeRemoteDatasourceImpl(gh<_i602.HomeApiClient>()),
+    );
+    gh.factory<_i363.ProfileRemoteDataSource>(
+      () => _i18.ProfileRemoteDataSourceImpl(gh<_i848.ProfileApiClient>()),
     );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),
@@ -96,6 +116,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i716.AuthRepositoryImpl(
         gh<_i345.AuthRemoteDatasource>(),
         gh<_i505.AuthLocalDatasource>(),
+        gh<_i185.SafeCall>(),
+      ),
+    );
+    gh.factory<_i880.ProfileRepository>(
+      () => _i819.ProfileRepositoryImpl(
+        gh<_i363.ProfileRemoteDataSource>(),
         gh<_i185.SafeCall>(),
       ),
     );
@@ -129,6 +155,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i735.SignUpViewModel>(
       () => _i735.SignUpViewModel(gh<_i808.SignUpUseCase>()),
     );
+    gh.factory<_i886.ChangePasswordUseCase>(
+      () => _i886.ChangePasswordUseCase(gh<_i880.ProfileRepository>()),
+    );
+    gh.factory<_i26.EditProfileUseCase>(
+      () => _i26.EditProfileUseCase(gh<_i880.ProfileRepository>()),
+    );
+    gh.factory<_i976.GetProfileDataUseCase>(
+      () => _i976.GetProfileDataUseCase(gh<_i880.ProfileRepository>()),
+    );
     gh.factory<_i696.ExamsViewModel>(
       () => _i696.ExamsViewModel(gh<_i597.GetExamsUseCase>()),
     );
@@ -146,6 +181,13 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i45.SubjectViewModel(
         gh<_i773.SubjectUseCase>(),
         gh<_i597.GetExamsUseCase>(),
+      ),
+    );
+    gh.factory<_i699.ProfileViewModel>(
+      () => _i699.ProfileViewModel(
+        gh<_i976.GetProfileDataUseCase>(),
+        gh<_i26.EditProfileUseCase>(),
+        gh<_i886.ChangePasswordUseCase>(),
       ),
     );
     return this;

@@ -8,4 +8,5 @@ class AppRoutesNamed {
   static const String home = '/home';
   static const String explore = '/explore';
   static const String examDetails = '/examDetails';
+  static const String changePassword = '/change-password';
 }

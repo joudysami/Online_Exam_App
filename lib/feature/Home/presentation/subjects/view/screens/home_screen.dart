@@ -1,7 +1,7 @@
 import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view/screens/explore_screen.dart';
-import 'package:exam_app/feature/Home/presentation/subjects/view/screens/profile_screen.dart';
+import 'package:exam_app/feature/Profile/presentation/view/screens/profile_screen.dart';
 import 'package:exam_app/feature/Home/presentation/subjects/view/screens/result_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _tabs = const [ExploreScreen(), 
   ResultScreen(),
-   ProfileTab()];
+   ProfileScreen()];
 
   @override
   Widget build(BuildContext context) {
