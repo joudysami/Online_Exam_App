@@ -1,4 +1,5 @@
 import 'package:exam_app/core/theme/app_colors.dart';
+import 'package:exam_app/feature/Home/presentation/questions/view_model/questions_event.dart';
 import 'package:exam_app/feature/Home/presentation/questions/view_model/questions_state.dart';
 import 'package:exam_app/feature/Home/presentation/questions/view_model/questions_view_model.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class QuestionsScreenState extends State<QuestionsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<QuestionsViewModel>().getQuestions(widget.examId, widget.duration);
+    context.read<QuestionsViewModel>().doEvent(GetQuestionsEvent(widget.examId, widget.duration));
   }
 
   String formatTime(int seconds) {
@@ -63,7 +64,7 @@ class QuestionsScreenState extends State<QuestionsScreen> {
                 ),
                 onPressed: () {
                   context.pop();
-                  context.read<QuestionsViewModel>().finishExam(widget.examId);
+                  context.read<QuestionsViewModel>().doEvent(FinishExamEvent(widget.examId));
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -193,9 +194,11 @@ class QuestionsScreenState extends State<QuestionsScreen> {
                       
                       return InkWell(
                         onTap: () {
-                          context.read<QuestionsViewModel>().selectAnswer(
-                                currentQuestion.id,
-                                answer.id,
+                          context.read<QuestionsViewModel>().doEvent(
+                                SelectAnswerEvent(
+                                  questionId: currentQuestion.id,
+                                  answerId: answer.id,
+                                ),
                               );
                         },
                         borderRadius: BorderRadius.circular(10.r),
@@ -246,7 +249,7 @@ class QuestionsScreenState extends State<QuestionsScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                           ),
                           onPressed: state.currentIndex > 0
-                              ? () => context.read<QuestionsViewModel>().previousQuestion()
+                              ? () => context.read<QuestionsViewModel>().doEvent(PreviousQuestionEvent())
                               : null,
                           child: Text('Back', style: TextStyle(color: state.currentIndex > 0 ? colors.blue : colors.grey)),
                         ),
@@ -262,9 +265,9 @@ class QuestionsScreenState extends State<QuestionsScreen> {
                           onPressed: hasAnswered
                               ? () {
                                   if (isLastQuestion) {
-                                    context.read<QuestionsViewModel>().finishExam(widget.examId);
+                                    context.read<QuestionsViewModel>().doEvent(FinishExamEvent(widget.examId));
                                   } else {
-                                    context.read<QuestionsViewModel>().nextQuestion();
+                                    context.read<QuestionsViewModel>().doEvent(NextQuestionEvent());
                                   }
                                 }
                               : null,

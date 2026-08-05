@@ -3,6 +3,7 @@ import 'package:exam_app/config/base/base_response.dart';
 import 'package:exam_app/feature/Home/data/models/check_answers_request.dart';
 import 'package:exam_app/feature/Home/domain/usecase/check_exam_answers_usecase.dart';
 import 'package:exam_app/feature/Home/domain/usecase/get_exam_questions_usecase.dart';
+import 'package:exam_app/feature/Home/presentation/questions/view_model/questions_event.dart';
 import 'package:exam_app/feature/Home/presentation/questions/view_model/questions_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -17,6 +18,29 @@ class QuestionsViewModel extends Cubit<QuestionsState> {
     this.getExamQuestionsUseCase,
     this.checkExamAnswersUseCase,
   ) : super(const QuestionsState());
+
+  void doEvent(QuestionsEvent event) {
+    switch (event) {
+      case GetQuestionsEvent():
+        getQuestions(event.examId, event.duration);
+        break;
+      case SelectAnswerEvent():
+        selectAnswer(event.questionId, event.answerId);
+        break;
+      case NextQuestionEvent():
+        nextQuestion();
+        break;
+      case PreviousQuestionEvent():
+        previousQuestion();
+        break;
+      case TimeTickEvent():
+        onTimeTick();
+        break;
+      case FinishExamEvent():
+        finishExam(event.examId);
+        break;
+    }
+  }
 
   Future<void> getQuestions(String examId, String duration) async {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
@@ -70,7 +94,7 @@ class QuestionsViewModel extends Cubit<QuestionsState> {
   void startTimer() {
     timer?.cancel();
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      onTimeTick();
+      doEvent(TimeTickEvent());
     });
   }
 
