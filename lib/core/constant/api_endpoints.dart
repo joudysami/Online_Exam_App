@@ -10,5 +10,6 @@ static const String subject="api/v1/subjects";
 static const String exam="api/v1/exams";
 static const String questions="api/v1/questions";
 static const String checkQuestions="api/v1/questions/check";
+static const String history="api/v1/questions/history";
 }
 

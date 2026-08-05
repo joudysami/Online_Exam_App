@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:exam_app/core/constant/api_endpoints.dart';
 import 'package:exam_app/feature/Home/data/models/exams_response.dart';
+import 'package:exam_app/feature/Home/data/models/history_response.dart';
 import 'package:exam_app/feature/Home/data/models/subjects_response.dart';
 import 'package:exam_app/feature/Home/data/models/questions_response.dart';
 import 'package:exam_app/feature/Home/data/models/check_answers_request.dart';
@@ -22,4 +23,7 @@ abstract class HomeApiClient {
 
   @POST(ApiEndpoints.checkQuestions)
   Future<CheckAnswersResponse> checkAnswers(@Body() CheckAnswersRequest request);
+
+  @GET(ApiEndpoints.history)
+  Future<HistoryResponse> getHistory();
 }

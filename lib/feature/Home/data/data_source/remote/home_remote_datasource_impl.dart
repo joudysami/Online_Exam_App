@@ -1,6 +1,7 @@
 import 'package:exam_app/feature/Home/data/api/home_api_client.dart';
 import 'package:exam_app/feature/Home/data/data_source/remote/home_remote_datasource.dart';
 import 'package:exam_app/feature/Home/data/models/exams_response.dart';
+import 'package:exam_app/feature/Home/data/models/history_response.dart';
 import 'package:exam_app/feature/Home/data/models/subjects_response.dart';
 import 'package:exam_app/feature/Home/data/models/questions_response.dart';
 import 'package:exam_app/feature/Home/data/models/check_answers_request.dart';
@@ -29,5 +30,10 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
   @override
   Future<CheckAnswersResponse> checkAnswers(CheckAnswersRequest request) async {
     return await homeApiClient.checkAnswers(request);
+  }
+
+  @override
+  Future<HistoryResponse> getHistory() {
+   return homeApiClient.getHistory();
   }
 }

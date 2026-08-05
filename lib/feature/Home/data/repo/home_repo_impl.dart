@@ -2,6 +2,7 @@ import 'package:exam_app/config/base/base_response.dart';
 import 'package:exam_app/config/network/safe_call.dart';
 import 'package:exam_app/feature/Home/data/data_source/remote/home_remote_datasource.dart';
 import 'package:exam_app/feature/Home/domain/entity/exam_entity.dart';
+import 'package:exam_app/feature/Home/domain/entity/history_entity.dart';
 import 'package:exam_app/feature/Home/domain/entity/subject_entity.dart';
 import 'package:exam_app/feature/Home/domain/entity/question_entity.dart';
 import 'package:exam_app/feature/Home/domain/entity/score_entity.dart';
@@ -44,6 +45,14 @@ class HomeRepoImpl implements HomeRepo {
     return safeCall.safeApiCall(() async {
       final response = await homeRemoteDatasource.checkAnswers(request);
       return response.toDomain();
+    });
+  }
+
+  @override
+  Future<BaseResponse<List<HistoryEntity>>> getHistory() {
+    return safeCall.safeApiCall(() async {
+      final response = await homeRemoteDatasource.getHistory();
+      return response.history?.map((history) => history.toDomain()).toList() ?? [];
     });
   }
 }
