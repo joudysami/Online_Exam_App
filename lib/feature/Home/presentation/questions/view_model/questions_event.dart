@@ -1,28 +1,15 @@
-import 'package:equatable/equatable.dart';
-
-abstract class QuestionsEvent extends Equatable {
-  const QuestionsEvent();
-
-  @override
-  List<Object?> get props => [];
-}
+sealed class QuestionsEvent {}
 
 class GetQuestionsEvent extends QuestionsEvent {
   final String examId;
   final String duration;
-  const GetQuestionsEvent(this.examId, this.duration);
-
-  @override
-  List<Object?> get props => [examId, duration];
+  GetQuestionsEvent(this.examId, this.duration);
 }
 
 class SelectAnswerEvent extends QuestionsEvent {
   final String questionId;
   final String answerId;
-  const SelectAnswerEvent({required this.questionId, required this.answerId});
-
-  @override
-  List<Object?> get props => [questionId, answerId];
+  SelectAnswerEvent({required this.questionId, required this.answerId});
 }
 
 class NextQuestionEvent extends QuestionsEvent {}
@@ -33,8 +20,5 @@ class TimeTickEvent extends QuestionsEvent {}
 
 class FinishExamEvent extends QuestionsEvent {
   final String examId;
-  const FinishExamEvent(this.examId);
-
-  @override
-  List<Object?> get props => [examId];
+  FinishExamEvent(this.examId);
 }

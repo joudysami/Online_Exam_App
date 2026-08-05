@@ -9,35 +9,51 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class QuestionsViewModel extends Bloc<QuestionsEvent, QuestionsState> {
+class QuestionsViewModel extends Cubit<QuestionsState> {
   final GetExamQuestionsUseCase getExamQuestionsUseCase;
   final CheckExamAnswersUseCase checkExamAnswersUseCase;
-  Timer? _timer;
+  Timer? timer;
 
   QuestionsViewModel(
     this.getExamQuestionsUseCase,
     this.checkExamAnswersUseCase,
-  ) : super(const QuestionsState()) {
-    on<GetQuestionsEvent>(_onGetQuestions);
-    on<SelectAnswerEvent>(_onSelectAnswer);
-    on<NextQuestionEvent>(_onNextQuestion);
-    on<PreviousQuestionEvent>(_onPreviousQuestion);
-    on<TimeTickEvent>(_onTimeTick);
-    on<FinishExamEvent>(_onFinishExam);
+  ) : super(const QuestionsState());
+
+  void doEvent(QuestionsEvent event) {
+    switch (event) {
+      case GetQuestionsEvent():
+        getQuestions(event.examId, event.duration);
+        break;
+      case SelectAnswerEvent():
+        selectAnswer(event.questionId, event.answerId);
+        break;
+      case NextQuestionEvent():
+        nextQuestion();
+        break;
+      case PreviousQuestionEvent():
+        previousQuestion();
+        break;
+      case TimeTickEvent():
+        onTimeTick();
+        break;
+      case FinishExamEvent():
+        finishExam(event.examId);
+        break;
+    }
   }
 
-  void _onGetQuestions(GetQuestionsEvent event, Emitter<QuestionsState> emit) async {
+  Future<void> getQuestions(String examId, String duration) async {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
     
     int totalSeconds = 1800;
     try {
-      final numberString = event.duration.replaceAll(RegExp(r'[^0-9]'), '');
+      final numberString = duration.replaceAll(RegExp(r'[^0-9]'), '');
       if (numberString.isNotEmpty) {
         totalSeconds = int.parse(numberString) * 60;
       }
     } catch (_) {}
 
-    final result = await getExamQuestionsUseCase(event.examId);
+    final result = await getExamQuestionsUseCase(examId);
     
     switch (result) {
       case SuccessResponse():
@@ -46,7 +62,7 @@ class QuestionsViewModel extends Bloc<QuestionsEvent, QuestionsState> {
           questions: result.data,
           timeRemainingInSeconds: totalSeconds, 
         ));
-        _startTimer();
+        startTimer();
       case ErrorResponse():
         emit(state.copyWith(
           isLoading: false,
@@ -57,41 +73,41 @@ class QuestionsViewModel extends Bloc<QuestionsEvent, QuestionsState> {
     }
   }
 
-  void _onSelectAnswer(SelectAnswerEvent event, Emitter<QuestionsState> emit) {
+  void selectAnswer(String questionId, String answerId) {
     final Map<String, String> newAnswers = Map.from(state.userAnswers);
-    newAnswers[event.questionId] = event.answerId;
+    newAnswers[questionId] = answerId;
     emit(state.copyWith(userAnswers: newAnswers));
   }
 
-  void _onNextQuestion(NextQuestionEvent event, Emitter<QuestionsState> emit) {
+  void nextQuestion() {
     if (state.currentIndex < state.questions.length - 1) {
       emit(state.copyWith(currentIndex: state.currentIndex + 1));
     }
   }
 
-  void _onPreviousQuestion(PreviousQuestionEvent event, Emitter<QuestionsState> emit) {
+  void previousQuestion() {
     if (state.currentIndex > 0) {
       emit(state.copyWith(currentIndex: state.currentIndex - 1));
     }
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      add(TimeTickEvent());
+  void startTimer() {
+    timer?.cancel();
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      doEvent(TimeTickEvent());
     });
   }
 
-  void _onTimeTick(TimeTickEvent event, Emitter<QuestionsState> emit) {
+  void onTimeTick() {
     if (state.timeRemainingInSeconds > 0) {
       emit(state.copyWith(timeRemainingInSeconds: state.timeRemainingInSeconds - 1));
     } else if (state.timeRemainingInSeconds == 0) {
-      _timer?.cancel();
+      timer?.cancel();
     }
   }
 
-  void _onFinishExam(FinishExamEvent event, Emitter<QuestionsState> emit) async {
-    _timer?.cancel();
+  Future<void> finishExam(String examId) async {
+    timer?.cancel();
     emit(state.copyWith(isSubmitting: true, isFinished: true));
 
     final answersList = state.userAnswers.entries
@@ -124,7 +140,7 @@ class QuestionsViewModel extends Bloc<QuestionsEvent, QuestionsState> {
 
   @override
   Future<void> close() {
-    _timer?.cancel();
+    timer?.cancel();
     return super.close();
   }
 }

@@ -14,25 +14,25 @@ class QuestionsScreen extends StatefulWidget {
   const QuestionsScreen({super.key, required this.examId, this.duration = "30"});
 
   @override
-  State<QuestionsScreen> createState() => _QuestionsScreenState();
+  State<QuestionsScreen> createState() => QuestionsScreenState();
 }
 
-class _QuestionsScreenState extends State<QuestionsScreen> {
-  bool _timeoutDialogShown = false;
+class QuestionsScreenState extends State<QuestionsScreen> {
+  bool timeoutDialogShown = false;
 
   @override
   void initState() {
     super.initState();
-    context.read<QuestionsViewModel>().add(GetQuestionsEvent(widget.examId, widget.duration));
+    context.read<QuestionsViewModel>().doEvent(GetQuestionsEvent(widget.examId, widget.duration));
   }
 
-  String _formatTime(int seconds) {
+  String formatTime(int seconds) {
     final int min = seconds ~/ 60;
     final int sec = seconds % 60;
     return '${min.toString().padLeft(2, '0')}:${sec.toString().padLeft(2, '0')}';
   }
 
-  void _showTimeoutDialog(BuildContext context, AppColors colors) {
+  void showTimeoutDialog(BuildContext context, AppColors colors) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -63,8 +63,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   ),
                 ),
                 onPressed: () {
-                  context.pop(); // close dialog
-                  context.read<QuestionsViewModel>().add(FinishExamEvent(widget.examId));
+                  context.pop();
+                  context.read<QuestionsViewModel>().doEvent(FinishExamEvent(widget.examId));
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -87,9 +87,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         if (state.timeRemainingInSeconds == 0 &&
             state.questions.isNotEmpty &&
             !state.isFinished &&
-            !_timeoutDialogShown) {
-          _timeoutDialogShown = true;
-          _showTimeoutDialog(context, colors);
+            !timeoutDialogShown) {
+          timeoutDialogShown = true;
+          showTimeoutDialog(context, colors);
         }
         if (state.score != null && !state.isSubmitting) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -145,7 +145,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       Icon(Icons.timer_outlined, color: colors.success, size: 20.r),
                       SizedBox(width: 4.w),
                       Text(
-                        _formatTime(state.timeRemainingInSeconds),
+                        formatTime(state.timeRemainingInSeconds),
                         style: TextStyle(
                           color: colors.success,
                           fontSize: 16.sp,
@@ -194,12 +194,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       
                       return InkWell(
                         onTap: () {
-                          context.read<QuestionsViewModel>().add(
-                            SelectAnswerEvent(
-                              questionId: currentQuestion.id,
-                              answerId: answer.id,
-                            ),
-                          );
+                          context.read<QuestionsViewModel>().doEvent(
+                                SelectAnswerEvent(
+                                  questionId: currentQuestion.id,
+                                  answerId: answer.id,
+                                ),
+                              );
                         },
                         borderRadius: BorderRadius.circular(10.r),
                         child: Container(
@@ -249,7 +249,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                           ),
                           onPressed: state.currentIndex > 0
-                              ? () => context.read<QuestionsViewModel>().add(PreviousQuestionEvent())
+                              ? () => context.read<QuestionsViewModel>().doEvent(PreviousQuestionEvent())
                               : null,
                           child: Text('Back', style: TextStyle(color: state.currentIndex > 0 ? colors.blue : colors.grey)),
                         ),
@@ -265,9 +265,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           onPressed: hasAnswered
                               ? () {
                                   if (isLastQuestion) {
-                                    context.read<QuestionsViewModel>().add(FinishExamEvent(widget.examId));
+                                    context.read<QuestionsViewModel>().doEvent(FinishExamEvent(widget.examId));
                                   } else {
-                                    context.read<QuestionsViewModel>().add(NextQuestionEvent());
+                                    context.read<QuestionsViewModel>().doEvent(NextQuestionEvent());
                                   }
                                 }
                               : null,
