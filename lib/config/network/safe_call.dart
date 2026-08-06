@@ -14,6 +14,7 @@ class SafeCall {
         final appError = errorParser(e);
         return ErrorResponse(appError: appError);
       }
+      return ErrorResponse(
         appError: BadResponseError('Unexpected error: ${e.toString()}'),
       );
     }

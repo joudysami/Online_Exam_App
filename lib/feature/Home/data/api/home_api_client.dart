@@ -18,7 +18,7 @@ abstract class HomeApiClient {
   Future<ExamsResponse> getAllExams();
 
   @GET(ApiEndpoints.questions)
-  Future<QuestionsResponse> getQuestionsByExam(@Query('exam') String examId);
+  Future<QuestionsResponse> getQuestionsByExam(@Query(ApiEndpoints.examQuery) String examId);
 
   @POST(ApiEndpoints.checkQuestions)
   Future<CheckAnswersResponse> checkAnswers(@Body() CheckAnswersRequest request);

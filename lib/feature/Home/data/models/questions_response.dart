@@ -53,16 +53,13 @@ class QuestionModel {
 
 @JsonSerializable()
 class AnswerModel {
-  @JsonKey(name: '_id')
-  final String? id;
   final String? answer;
   final String? key;
 
-  AnswerModel({this.id, this.answer, this.key});
+  AnswerModel({this.answer, this.key});
 
   AnswerEntity toDomain() {
     return AnswerEntity(
-      id: key ?? '',
       answerText: answer ?? '',
       key: key ?? '',
     );

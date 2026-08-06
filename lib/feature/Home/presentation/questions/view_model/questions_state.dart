@@ -1,11 +1,8 @@
-import 'package:equatable/equatable.dart';
+import 'package:exam_app/config/base/base_state.dart';
 import 'package:exam_app/feature/Home/domain/entity/question_entity.dart';
 import 'package:exam_app/feature/Home/domain/entity/score_entity.dart';
 
-class QuestionsState extends Equatable {
-  final bool isLoading;
-  final String errorMessage;
-  final List<QuestionEntity> questions;
+class QuestionsState extends BaseState<List<QuestionEntity>> {
   final int currentIndex;
   final Map<String, String> userAnswers;
   final int timeRemainingInSeconds;
@@ -14,9 +11,9 @@ class QuestionsState extends Equatable {
   final ScoreEntity? score;
 
   const QuestionsState({
-    this.isLoading = false,
-    this.errorMessage = '',
-    this.questions = const [],
+    super.isLoading = false,
+    super.errorMessage = '',
+    super.data,
     this.currentIndex = 0,
     this.userAnswers = const {},
     this.timeRemainingInSeconds = -1,
@@ -25,10 +22,11 @@ class QuestionsState extends Equatable {
     this.score,
   });
 
+  @override
   QuestionsState copyWith({
     bool? isLoading,
     String? errorMessage,
-    List<QuestionEntity>? questions,
+    List<QuestionEntity>? data,
     int? currentIndex,
     Map<String, String>? userAnswers,
     int? timeRemainingInSeconds,
@@ -39,7 +37,7 @@ class QuestionsState extends Equatable {
     return QuestionsState(
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
-      questions: questions ?? this.questions,
+      data: data ?? this.data,
       currentIndex: currentIndex ?? this.currentIndex,
       userAnswers: userAnswers ?? this.userAnswers,
       timeRemainingInSeconds: timeRemainingInSeconds ?? this.timeRemainingInSeconds,
@@ -48,17 +46,4 @@ class QuestionsState extends Equatable {
       score: score ?? this.score,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        isLoading,
-        errorMessage,
-        questions,
-        currentIndex,
-        userAnswers,
-        timeRemainingInSeconds,
-        isFinished,
-        isSubmitting,
-        score,
-      ];
 }

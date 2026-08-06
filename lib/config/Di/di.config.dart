@@ -86,14 +86,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i361.Dio>(
       () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
     );
+    gh.lazySingleton<_i39.AuthApiClient>(
+      () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i602.HomeApiClient>(
       () => apiModule.provideHomeApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i546.HomeRemoteDatasource>(
       () => _i82.HomeRemoteDatasourceImpl(gh<_i602.HomeApiClient>()),
-    );
-    gh.lazySingleton<_i39.AuthApiClient>(
-      () => _i39.AuthApiClient(gh<_i361.Dio>(), baseUrl: gh<String>()),
     );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),

@@ -1,3 +1,4 @@
+import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/feature/Home/domain/entity/score_entity.dart';
 import 'package:flutter/material.dart';
@@ -11,24 +12,18 @@ class ScoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    
+
     final double percentage = score.total > 0
-        ? (score.correct / score.total) 
+        ? (score.correct / score.total)
         : 0;
 
     return Scaffold(
-      backgroundColor: colors.white,
       appBar: AppBar(
-        backgroundColor: colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: colors.black, size: 20.r),
+          icon: Icon(Icons.arrow_back_ios_new, size: 20.r),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'Exam score',
-          style: TextStyle(color: colors.black, fontSize: 20.sp, fontWeight: FontWeight.w600),
-        ),
+        title: Text(AppString.examScore),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.r),
@@ -36,12 +31,8 @@ class ScoreScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your score',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: colors.black,
-              ),
+              AppString.result,
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: colors.black),
             ),
             SizedBox(height: 30.h),
             Row(
@@ -57,45 +48,21 @@ class ScoreScreen extends StatelessWidget {
                         value: percentage,
                         strokeWidth: 10.r,
                         color: colors.blue,
-                        backgroundColor: colors.blue.withOpacity(0.1),
+                        backgroundColor: colors.blue.withValues(alpha: 0.1),
                       ),
                     ),
                     Text(
                       '${(percentage * 100).toInt()}%',
-                      style: TextStyle(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
-                        color: colors.blue,
-                      ),
+                      style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: colors.blue),
                     ),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text('Correct', style: TextStyle(color: colors.blue, fontSize: 16.sp, fontWeight: FontWeight.w500)),
-                        SizedBox(width: 20.w),
-                        CircleAvatar(
-                          radius: 12.r,
-                          backgroundColor: colors.blue.withOpacity(0.1),
-                          child: Text('${score.correct}', style: TextStyle(color: colors.blue, fontSize: 12.sp)),
-                        ),
-                      ],
-                    ),
+                    _ScoreRow(label: 'Correct', count: score.correct, color: colors.blue),
                     SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Text('Incorrect', style: TextStyle(color: colors.error, fontSize: 16.sp, fontWeight: FontWeight.w500)),
-                        SizedBox(width: 12.w),
-                        CircleAvatar(
-                          radius: 12.r,
-                          backgroundColor: colors.error.withOpacity(0.1),
-                          child: Text('${score.incorrect}', style: TextStyle(color: colors.error, fontSize: 12.sp)),
-                        ),
-                      ],
-                    ),
+                    _ScoreRow(label: 'Incorrect', count: score.incorrect, color: colors.error),
                   ],
                 ),
               ],
@@ -104,16 +71,8 @@ class ScoreScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors.blue,
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                ),
-                onPressed: () {
-                  // Show results logic if available, for now just pop
-                  context.pop();
-                },
-                child: Text('Show results', style: TextStyle(color: colors.white, fontSize: 16.sp)),
+                onPressed: () => context.pop(),
+                child: Text(AppString.startExam),
               ),
             ),
             SizedBox(height: 16.h),
@@ -125,11 +84,8 @@ class ScoreScreen extends StatelessWidget {
                   side: BorderSide(color: colors.blue),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                 ),
-                onPressed: () {
-                  // Restart exam logic, can just pop back to exam details
-                  context.pop();
-                },
-                child: Text('Start again', style: TextStyle(color: colors.blue, fontSize: 16.sp)),
+                onPressed: () => context.pop(),
+                child: Text(AppString.startExam, style: TextStyle(color: colors.blue, fontSize: 16.sp)),
               ),
             ),
             SizedBox(height: 20.h),
@@ -139,3 +95,28 @@ class ScoreScreen extends StatelessWidget {
     );
   }
 }
+
+class _ScoreRow extends StatelessWidget {
+  final String label;
+  final int count;
+  final Color color;
+
+  const _ScoreRow({required this.label, required this.count, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(label, style: TextStyle(color: color, fontSize: 16.sp, fontWeight: FontWeight.w500)),
+        SizedBox(width: 20.w),
+        CircleAvatar(
+          radius: 12.r,
+          backgroundColor: color.withValues(alpha: 0.1),
+          child: Text('$count', style: TextStyle(color: color, fontSize: 12.sp)),
+        ),
+      ],
+    );
+  }
+}
+
+

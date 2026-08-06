@@ -16,16 +16,14 @@ class QuestionEntity extends Equatable {
 }
 
 class AnswerEntity extends Equatable {
-  final String id;
   final String answerText;
   final String key;
 
   const AnswerEntity({
-    required this.id,
     required this.answerText,
     required this.key,
   });
 
   @override
-  List<Object?> get props => [id, answerText, key];
+  List<Object?> get props => [answerText, key];
 }
