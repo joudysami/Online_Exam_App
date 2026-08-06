@@ -17,23 +17,26 @@ AppError errorParser(Exception exception) {
 
       case DioExceptionType.badResponse:
         final data = exception.response?.data;
-        if (exception.response?.statusCode == 401) {
-          return ForceLogin();
-        }
+
         if (data is Map<String, dynamic>) {
           if (data['message'] != null) {
             return BadResponseError(data['message'].toString());
           }
+
           if (data['error'] != null) {
             return BadResponseError(data['error'].toString());
           }
-           }
+        }
+
+        if (exception.response?.statusCode == 401) {
+          return UnauthorizedError();
+        }
+
         return BadResponseError(
           statusCodeToMessage(exception.response?.statusCode),
         );
-
       case DioExceptionType.cancel:
-      return IgnoreError();
+        return IgnoreError();
       case DioExceptionType.connectionError:
         return NoInternetError(exception);
       case DioExceptionType.unknown:

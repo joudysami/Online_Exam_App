@@ -24,31 +24,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
-  static const authRoutes = [
-    AppRoutesNamed.login,
-    AppRoutesNamed.signup,
-    AppRoutesNamed.forgetPassword,
-    AppRoutesNamed.emailVerification,
-    AppRoutesNamed.resetPassword,
-  ];
-
   static GoRouter goRouter = GoRouter(
     initialLocation: AppRoutesNamed.login,
     redirect: (context, state) {
-      final token = getIt<AuthLocalDatasource>().getToken();
-      final isLoggedIn = token != null && token.isNotEmpty;
-      final isAuthRoute = authRoutes.contains(state.matchedLocation);
+    final token = getIt<AuthLocalDatasource>().getToken();
 
-      if (isLoggedIn && isAuthRoute) {
-        return AppRoutesNamed.home;
-      }
+    final loggedIn = token != null && token.isNotEmpty;
 
-      if (!isLoggedIn && !isAuthRoute) {
-        return AppRoutesNamed.login;
-      }
+    final isAuthPage =
+        state.matchedLocation == AppRoutesNamed.login ||
+        state.matchedLocation == AppRoutesNamed.signup;
 
-      return null;
-    },
+    if (!loggedIn && !isAuthPage) {
+      return AppRoutesNamed.login;
+    }
+
+    if (loggedIn && isAuthPage) {
+      return AppRoutesNamed.home;
+    }
+
+    return null;
+  },
+
     routes: [
       GoRoute(
         path: AppRoutesNamed.login,

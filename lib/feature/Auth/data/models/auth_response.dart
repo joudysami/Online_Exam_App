@@ -1,3 +1,4 @@
+import 'package:exam_app/feature/Auth/domain/entity/auth_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_response.g.dart';
@@ -13,6 +14,14 @@ class AuthResponse {
     this.token,
     this.user,
   });
+  AuthEntity toDomain() {
+    return AuthEntity(
+      token: token,
+      email: user?.email,
+      username: user?.username,
+    );
+  }
+
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) => _$AuthResponseFromJson(json);
 
@@ -39,8 +48,9 @@ class UserDto {
     this.email,
     this.phone,
   });
-
+  
   factory UserDto.fromJson(Map<String, dynamic> json) => _$UserDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserDtoToJson(this);
+  
 }

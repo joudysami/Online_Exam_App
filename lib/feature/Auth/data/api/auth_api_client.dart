@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../core/constant/api_constants.dart';
+import '../../../../core/constant/api_endpoints.dart';
 import '../models/login_request.dart';
 import '../models/auth_response.dart';
 import '../models/forget_password_request.dart';
@@ -10,23 +11,26 @@ import '../models/reset_password_request.dart';
 import '../models/sign_up_request.dart';
 
 part 'auth_api_client.g.dart';
+@LazySingleton()
 
-@RestApi(baseUrl: baseUrl)
+@RestApi(baseUrl:ApiEndpoints.baseUrl )
 abstract class AuthApiClient {
+  @factoryMethod
   factory AuthApiClient(Dio dio, {String baseUrl}) = _AuthApiClient;
 
-  @POST("api/v1/auth/signin")
+  @POST(ApiEndpoints.sinIn)
   Future<AuthResponse> signIn(@Body() LoginRequest request);
 
-  @POST("api/v1/auth/signup")
+  @POST(ApiEndpoints.sinUp)
+
   Future<AuthResponse> signUp(@Body() SignUpRequest request);
 
-  @POST("api/v1/auth/forgotPassword")
+  @POST(ApiEndpoints.forgotPassword)
   Future<AuthResponse> forgotPassword(@Body() ForgetPasswordRequest request);
 
-  @POST("api/v1/auth/verifyResetCode")
+  @POST(ApiEndpoints.verifyResetCode)
   Future<AuthResponse> verifyResetCode(@Body() VerifyResetCodeRequest request);
 
-  @PUT("api/v1/auth/resetPassword")
+  @PUT(ApiEndpoints.resetPassword)
   Future<AuthResponse> resetPassword(@Body() ResetPasswordRequest request);
 }
