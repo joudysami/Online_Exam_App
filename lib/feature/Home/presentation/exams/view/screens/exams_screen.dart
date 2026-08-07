@@ -91,6 +91,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                             context.pushNamed(
                               AppRoutesNamed.startExam,
                               extra: ExamDetailsArgs(
+                                examId: exam.id,
                                 subjectId: widget.subjectId,
                                 subjectName: widget.subjectName,
                                 subjectIcon: widget.subjectIcon,

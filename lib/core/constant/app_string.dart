@@ -85,7 +85,19 @@ class AppString {
   static const String duration = 'Duration';
   static const String highLevel = 'High-level ';
     static const String tokenKey = 'token';
-    static const String noExamsFound = 'No exams found';
+  static const String noExamsFound = 'No exams found';
+  
+  // Questions Feature
+  static const String timeout = 'Time out !!';
+  static const String viewScore = 'View score';
+  static const String exam = 'Exam';
+  static String questionOf(int current, int total) => 'Question $current of $total';
+  static const String back = 'Back';
+  static const String finish = 'Finish';
+  static const String next = 'Next';
+  static const String noQuestionsFound = 'No questions found.';
+  static const String examScore = 'Exam score';
+  static const String somethingWentWrong = 'Something went wrong, please try again.';
 }
 
 

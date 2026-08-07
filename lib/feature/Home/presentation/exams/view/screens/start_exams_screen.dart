@@ -3,11 +3,14 @@ import 'package:exam_app/core/constant/app_string.dart';
 import 'package:exam_app/core/theme/app_colors.dart';
 import 'package:exam_app/core/widgets/custom_button.dart';
 import 'package:exam_app/feature/Home/presentation/exams/view/widgets/instruction_items.dart';
+import 'package:exam_app/config/routes/app_routes_named.dart';
+import 'package:exam_app/feature/Home/data/models/exam_details_args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class StartExamScreen extends StatelessWidget {
+  final String examId;
   final String subjectId;
   final String subjectName;
   final String subjectIcon;
@@ -16,6 +19,7 @@ class StartExamScreen extends StatelessWidget {
 
   const StartExamScreen({
     super.key,
+    required this.examId,
     required this.subjectIcon,
     required this.subjectId,
     required this.subjectName,
@@ -157,7 +161,22 @@ class StartExamScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               child: SizedBox(
                 width: double.infinity,
-                child: CustomButton(text: AppString.startExam, onTap: () {}),
+                child: CustomButton(
+                  text: AppString.startExam, 
+                  onTap: () {
+                    context.pushNamed(
+                      AppRoutesNamed.questionsScreen,
+                      extra: ExamDetailsArgs(
+                        examId: examId,
+                        subjectId: subjectId,
+                        subjectName: subjectName,
+                        subjectIcon: subjectIcon,
+                        duration: duration,
+                        numberOfQuestions: numberOfQuestions,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Spacer(),

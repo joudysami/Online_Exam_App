@@ -44,10 +44,16 @@ import '../../feature/Home/data/data_source/remote/home_remote_datasource_impl.d
     as _i82;
 import '../../feature/Home/data/repo/home_repo_impl.dart' as _i585;
 import '../../feature/Home/domain/repo/home_repo.dart' as _i440;
+import '../../feature/Home/domain/usecase/check_exam_answers_usecase.dart'
+    as _i1041;
 import '../../feature/Home/domain/usecase/exams_use_case.dart' as _i363;
+import '../../feature/Home/domain/usecase/get_exam_questions_usecase.dart'
+    as _i481;
 import '../../feature/Home/domain/usecase/subject_use_case.dart' as _i480;
 import '../../feature/Home/presentation/exams/view_model/exam_view_model.dart'
     as _i696;
+import '../../feature/Home/presentation/questions/view_model/questions_view_model.dart'
+    as _i519;
 import '../../feature/Home/presentation/subjects/view_model/subject_view_model.dart'
     as _i45;
 import '../modules/dio_module.dart' as _i948;
@@ -80,14 +86,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i361.Dio>(
       () => dioModule.provideDio(gh<_i466.AuthInterceptors>()),
     );
+    gh.lazySingleton<_i39.AuthApiClient>(
+      () => apiModule.provideAuthApiClient(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i602.HomeApiClient>(
       () => apiModule.provideHomeApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i546.HomeRemoteDatasource>(
       () => _i82.HomeRemoteDatasourceImpl(gh<_i602.HomeApiClient>()),
-    );
-    gh.lazySingleton<_i39.AuthApiClient>(
-      () => _i39.AuthApiClient(gh<_i361.Dio>(), baseUrl: gh<String>()),
     );
     gh.factory<_i345.AuthRemoteDatasource>(
       () => _i242.AuthRemoteDatasourceImpl(gh<_i39.AuthApiClient>()),
@@ -120,11 +126,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i866.VerifyCodeUseCase>(
       () => _i866.VerifyCodeUseCase(gh<_i847.AuthRepository>()),
     );
+    gh.factory<_i1041.CheckExamAnswersUseCase>(
+      () => _i1041.CheckExamAnswersUseCase(gh<_i440.HomeRepo>()),
+    );
     gh.factory<_i363.GetExamsUseCase>(
       () => _i363.GetExamsUseCase(gh<_i440.HomeRepo>()),
     );
+    gh.factory<_i481.GetExamQuestionsUseCase>(
+      () => _i481.GetExamQuestionsUseCase(gh<_i440.HomeRepo>()),
+    );
     gh.factory<_i480.GetSubjectsUseCase>(
       () => _i480.GetSubjectsUseCase(gh<_i440.HomeRepo>()),
+    );
+    gh.factory<_i519.QuestionsViewModel>(
+      () => _i519.QuestionsViewModel(
+        gh<_i481.GetExamQuestionsUseCase>(),
+        gh<_i1041.CheckExamAnswersUseCase>(),
+      ),
     );
     gh.factory<_i735.SignUpViewModel>(
       () => _i735.SignUpViewModel(gh<_i808.SignUpUseCase>()),

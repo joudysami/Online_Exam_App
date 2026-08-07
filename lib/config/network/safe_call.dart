@@ -1,5 +1,6 @@
 import 'package:exam_app/config/base/base_response.dart';
 import 'package:exam_app/config/errors/error_parser.dart';
+import 'package:exam_app/config/errors/app_error.dart';
 import 'package:injectable/injectable.dart';
 @injectable
 class SafeCall {
@@ -9,15 +10,13 @@ class SafeCall {
       final response = await apiCall();
       return SuccessResponse(response);
     } catch (e) {
-     final appError = errorParser(e as Exception);
-
+      if (e is Exception) {
+        final appError = errorParser(e);
+        return ErrorResponse(appError: appError);
+      }
       return ErrorResponse(
-
-        appError: appError,
+        appError: BadResponseError('Unexpected error: ${e.toString()}'),
       );
     }
   }
 }
-//try catch//
-//return safeApiCall(() => api.login());
-
