@@ -14,14 +14,13 @@ class SubjectViewModel extends Cubit<BaseState<List<SubjectEntity>>> {
 
   List<SubjectEntity> allSubjects = [];
   
-  void doEvent(SubjectEvent event) {
-    switch (event) {
-      case GetAllSubject():
-        _getAllSubject();
-
-        break;
-    }
+ Future<void> doEvent(SubjectEvent event) async {
+  switch (event) {
+    case GetAllSubject():
+      await _getAllSubject();
+      break;
   }
+}
 
   Future<void> _getAllSubject() async {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
