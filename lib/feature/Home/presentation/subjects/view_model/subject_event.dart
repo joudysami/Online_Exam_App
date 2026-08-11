@@ -1,3 +1,3 @@
-sealed class SubjectEvent {}
+ class SubjectEvent {}
 
 class GetAllSubject extends  SubjectEvent {}
